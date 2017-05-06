@@ -10,10 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.cellular.automaton.AbstractApplication;
-import com.cellular.automaton.engine.AbstractScreen;
-import com.cellular.automaton.engine.DrawableColor;
+import com.cellular.automaton.engine.Application;
+import com.cellular.automaton.engine.logic.Board;
+import com.cellular.automaton.engine.logic.Point;
+import com.cellular.automaton.engine.render.AbstractScreen;
+import com.cellular.automaton.engine.render.DrawableColor;
 
 public class GameOfLifeScreen extends AbstractScreen{
 
@@ -25,11 +26,12 @@ public class GameOfLifeScreen extends AbstractScreen{
     private Button toggleButton;
     private Button clearButton;
     private Button nextButton;
+    private Button resizeButton;
 
-    public GameOfLifeScreen(AbstractApplication abstractApplication) {
+    public GameOfLifeScreen(Application application) {
 
-        super(abstractApplication);
-        this.abstractApplication = abstractApplication;
+        super(application);
+        this.application = application;
 
         widthLabel = new Label("width", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         heightLabel = new Label("height", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -53,25 +55,30 @@ public class GameOfLifeScreen extends AbstractScreen{
         toggleButton = new TextButton("Play", textButtonStyle);
         clearButton = new TextButton("Clear", textButtonStyle);
         nextButton = new TextButton("Next", textButtonStyle);
+        resizeButton = new TextButton("Resize", textButtonStyle);
 
         seedButton.addListener(new ClickListener());
         toggleButton.addListener(new ClickListener());
         clearButton.addListener(new ClickListener());
         nextButton.addListener(new ClickListener());
+        resizeButton.addListener(new ClickListener());
+
 
         table.add(widthLabel).expandX();
         table.add(heightLabel).expandX();
         table.row();
-        table.add(widthField).width(100);
-        table.add(heightField).width(100);
+        table.add(widthField).width(uiViewport.getWorldWidth()/2);
+        table.add(heightField).width(uiViewport.getWorldWidth()/2);
         table.row();
         table.add(seedButton).expandX();
         table.add(toggleButton).expandX();
         table.row();
         table.add(clearButton).expandX();
         table.add(nextButton).expandX();
+        table.row();
+        table.add(resizeButton).expandX();
 
-        logic = new GameOfLifeLogic(100,100);
+        logic = new GameOfLifeLogic(20,20);
 
     }
 
@@ -90,14 +97,14 @@ public class GameOfLifeScreen extends AbstractScreen{
 
         update(delta);
 
-        if(!logic.isPaused && timer > 1/5f) {
+        if(!logic.isPaused() && timer > 1/5f) {
             logic.iterate();
             timer = 0;
         }
 
         handleInput();
 
-        logic.board.draw(shapeRenderer, cellCamera);
+        logic.getBoard().draw(shapeRenderer, cellCamera);
 
     }
 
@@ -117,23 +124,6 @@ public class GameOfLifeScreen extends AbstractScreen{
 
     public void handleInput() {
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.S) ) {
-
-            logic.board.seed();
-
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.C) ) {
-
-            logic.board.clear();
-
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.I) ) {
-
-            logic.iterate();
-
-        }
 
         if(Gdx.input.justTouched()) {
 
@@ -141,7 +131,7 @@ public class GameOfLifeScreen extends AbstractScreen{
             vector2 = cellViewport.unproject(vector2);
 
             if(vector2.x > 0 && vector2.y > 0) {
-                logic.board.swap( (int) (vector2.x / (Gdx.graphics.getHeight()/(logic.board.getSize().x-2) ) ), (int) (vector2.y / (Gdx.graphics.getHeight()/(logic.board.getSize().y-2) ) ) );
+                logic.click( (int) (vector2.x / (Gdx.graphics.getHeight()/logic.getBoard().getSize().x ) ), (int) (vector2.y / (Gdx.graphics.getHeight()/logic.getBoard().getSize().y ) ) );
             }
 
         }
@@ -154,8 +144,7 @@ public class GameOfLifeScreen extends AbstractScreen{
 
         if(seedButton.isPressed() && Gdx.input.justTouched()) {
 
-            logic.board.seed();
-            logic = new GameOfLifeLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText() ) );
+            logic.getBoard().seed();
 
         }
 
@@ -167,13 +156,19 @@ public class GameOfLifeScreen extends AbstractScreen{
 
         if(clearButton.isPressed() && Gdx.input.justTouched()) {
 
-            logic.board.clear();
+            logic.getBoard().clear();
 
         }
 
-        if(nextButton.isPressed() && Gdx.input.justTouched()) {
+        if(nextButton.isPressed() && Gdx.input.justTouched() && logic.isPaused()) {
 
             logic.iterate();
+
+        }
+
+        if(resizeButton.isPressed() && Gdx.input.justTouched()) {
+
+            logic = new GameOfLifeLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText() ) );
 
         }
 
