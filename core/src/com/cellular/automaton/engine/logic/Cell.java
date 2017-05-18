@@ -18,7 +18,7 @@ public abstract class Cell implements ICell {
     public Cell(int x, int y) {
 
         position = new Point(x, y);
-        color = new Color();
+        color = new Color(Color.BLACK);
         currentState = State.EMPTY;
         nextState = State.EMPTY;
 
@@ -64,4 +64,7 @@ public abstract class Cell implements ICell {
 
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
 }

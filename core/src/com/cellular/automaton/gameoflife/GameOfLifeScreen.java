@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cellular.automaton.engine.Application;
-import com.cellular.automaton.engine.logic.Board;
-import com.cellular.automaton.engine.logic.Point;
 import com.cellular.automaton.engine.render.AbstractScreen;
 import com.cellular.automaton.engine.render.DrawableColor;
 

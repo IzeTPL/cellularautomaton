@@ -3,17 +3,20 @@ package com.cellular.automaton.naiveseedsgrowth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cellular.automaton.engine.Application;
 import com.cellular.automaton.engine.render.AbstractScreen;
 import com.cellular.automaton.engine.render.DrawableColor;
-import com.cellular.automaton.gameoflife.GameOfLifeLogic;
 
 /**
  * Created by marian on 06.05.17.
@@ -22,13 +25,19 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
 
     private TextField widthField;
     private TextField heightField;
+    private TextField seedField;
     private Label widthLabel;
     private Label heightLabel;
+    private Label seedLabel;
+    private CheckBox continousSeeding;
     private Button seedButton;
     private Button toggleButton;
     private Button clearButton;
     private Button nextButton;
     private Button resizeButton;
+    private SelectBox<String> neighbourhoodSelection;
+    private SelectBox<String> boundaryConditionSelection;
+    private SelectBox<String> seedTypeSelection;
 
     public NaiveSeedsGrowthScreen(Application application) {
 
@@ -37,14 +46,18 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
 
         widthLabel = new Label("width", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         heightLabel = new Label("height", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        seedLabel = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        seedLabel.setVisible(false);
 
         TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
         textFieldStyle.font = new BitmapFont();
         textFieldStyle.fontColor = Color.BLACK;
         textFieldStyle.background = DrawableColor.getColor(Color.WHITE);
 
-        widthField = new TextField("10", textFieldStyle);
-        heightField = new TextField("10", textFieldStyle);
+        widthField = new TextField("500", textFieldStyle);
+        heightField = new TextField("500", textFieldStyle);
+        seedField = new TextField("5", textFieldStyle);
+        seedField.setVisible(false);
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = new BitmapFont();
@@ -52,6 +65,21 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
         textButtonStyle.overFontColor = Color.BLACK;
         textButtonStyle.over = DrawableColor.getColor(Color.WHITE);
 
+        Pixmap pixmap = new Pixmap(10,10, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+
+        Drawable drawable1 = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap) ) );
+
+        pixmap = new Pixmap(10,10, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.BLACK);
+        pixmap.fill();
+
+        Drawable drawable2 = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap) ) );
+
+        CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(drawable1, drawable2, new BitmapFont(), Color.WHITE);
+
+        continousSeeding = new CheckBox("Continous seeding", checkBoxStyle);
 
         seedButton = new TextButton("Seed", textButtonStyle);
         toggleButton = new TextButton("Play", textButtonStyle);
@@ -65,6 +93,98 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
         nextButton.addListener(new ClickListener());
         resizeButton.addListener(new ClickListener());
 
+        SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle();
+        selectBoxStyle.font = new BitmapFont();
+        selectBoxStyle.fontColor = Color.BLACK;
+        selectBoxStyle.background = DrawableColor.getColor(Color.WHITE);
+        List.ListStyle listStyle = new List.ListStyle();
+        listStyle.background = DrawableColor.getColor(Color.WHITE);
+        listStyle.font = new BitmapFont();
+        listStyle.fontColorSelected = Color.WHITE;
+        listStyle.fontColorUnselected = Color.BLACK;
+        listStyle.selection = DrawableColor.getColor(Color.BLACK);
+        selectBoxStyle.listStyle = listStyle;
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        scrollPaneStyle.background = DrawableColor.getColor(Color.WHITE);
+        scrollPaneStyle.hScrollKnob = DrawableColor.getColor(Color.WHITE);
+        scrollPaneStyle.hScroll = DrawableColor.getColor(Color.BLUE);
+        scrollPaneStyle.vScroll = DrawableColor.getColor(Color.BLUE);
+        scrollPaneStyle.vScrollKnob = DrawableColor.getColor(Color.WHITE);
+        selectBoxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle(scrollPaneStyle);
+
+        neighbourhoodSelection = new SelectBox<>(selectBoxStyle);
+
+        neighbourhoodSelection.setItems(
+                "Moore",
+                "Newman",
+                "Pentagonal random",
+                "Hexagonal random",
+                "Hexagonal left",
+                "Hexagonal right"
+        );
+
+        neighbourhoodSelection.setSelectedIndex(2);
+
+        neighbourhoodSelection.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
+            }
+
+        });
+
+        boundaryConditionSelection = new SelectBox<>(selectBoxStyle);
+
+        boundaryConditionSelection.setItems(
+                "Fixed",
+                "Periodic"
+        );
+
+        boundaryConditionSelection.setSelectedIndex(1);
+
+        boundaryConditionSelection.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
+            }
+
+        });
+
+        seedTypeSelection = new SelectBox<>(selectBoxStyle);
+
+        seedTypeSelection.setItems(
+                "Random seed",
+                "Regular Seed",
+                "Random with radius"
+        );
+
+        seedTypeSelection.setSelectedIndex(0);
+
+        seedTypeSelection.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                switch (seedTypeSelection.getSelectedIndex()) {
+
+                    case 0:
+                        seedField.setVisible(false);
+                        seedLabel.setVisible(false);
+                        break;
+                    case 1:
+                        seedField.setVisible(true);
+                        seedLabel.setVisible(true);
+                        seedLabel.setText("Distance");
+                        break;
+                    case 2:
+                        seedField.setVisible(true);
+                        seedLabel.setVisible(true);
+                        seedLabel.setText("Radius");
+                        break;
+
+                }
+            }
+        });
 
         table.add(widthLabel).expandX();
         table.add(heightLabel).expandX();
@@ -72,15 +192,26 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
         table.add(widthField).width(uiViewport.getWorldWidth()/2);
         table.add(heightField).width(uiViewport.getWorldWidth()/2);
         table.row();
-        table.add(seedButton).expandX();
-        table.add(toggleButton).expandX();
+        table.add(seedButton).expandX().fill();
+        table.add(seedTypeSelection).expandX().fill();
         table.row();
-        table.add(clearButton).expandX();
-        table.add(nextButton).expandX();
+        table.add(clearButton).expandX().fill();
+        table.add(nextButton).expandX().fill();
         table.row();
-        table.add(resizeButton).expandX();
+        table.add(resizeButton).expandX().fill();
+        table.add(toggleButton).expandX().fill();
+        table.row();
+        table.add(neighbourhoodSelection).expandX().fill();
+        table.add(boundaryConditionSelection).expandX().fill();
+        table.row();
+        table.add(seedLabel).expandX().fill();
+        table.add(seedField).expandX().fill();
+        table.row();
+        //table.add(continousSeeding).expandX().fill();
 
-        logic = new NaiveSeedsGrowthLogic(20,20);
+        logic = new NaiveSeedsGrowthLogic(500,500);
+
+        logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
 
     }
 
@@ -99,9 +230,15 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
 
         update(delta);
 
-        if(!logic.isPaused() && timer > 1/5f) {
+        if(!logic.isPaused()) {
             logic.iterate();
+        }
+
+        if(timer > 5 && continousSeeding.isChecked()) {
+
             timer = 0;
+            logic.getBoard().seed();
+
         }
 
         handleInput();
@@ -146,7 +283,17 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
 
         if(seedButton.isPressed() && Gdx.input.justTouched()) {
 
-            logic.getBoard().seed();
+            switch (seedTypeSelection.getSelectedIndex()) {
+                case 0:
+                    logic.getBoard().seed();
+                    break;
+                case 1:
+                    ( (NaiveSeedsGrowthBoard)logic.getBoard() ).seed(Integer.parseInt(seedField.getText()));
+                    break;
+                case 2:
+                    ( (NaiveSeedsGrowthBoard)logic.getBoard() ).radiusSeed(Integer.parseInt(seedField.getText()));
+                    break;
+            }
 
         }
 
@@ -170,7 +317,8 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
 
         if(resizeButton.isPressed() && Gdx.input.justTouched()) {
 
-            logic = new GameOfLifeLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText() ) );
+            logic = new NaiveSeedsGrowthLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText() ) );
+            logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
 
         }
 

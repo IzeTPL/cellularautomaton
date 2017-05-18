@@ -3,6 +3,7 @@ package com.cellular.automaton.engine.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -50,6 +51,8 @@ public abstract class AbstractScreen implements Screen {
 
         root = new Table();
         table = new Table();
+        table.setBackground(DrawableColor.getColor(Color.DARK_GRAY));
+        root.setBackground(DrawableColor.getColor(Color.GRAY));
 
         root.setFillParent(true);
         root.add(table).width(Gdx.graphics.getWidth() - Gdx.graphics.getHeight()).left().top().expand();
@@ -88,8 +91,10 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void resize(int width, int height) {
 
-        cellViewport.update(width, height);
-        uiViewport.update(width, height);
+        cellViewport.setWorldSize(height, height);
+        uiViewport.setWorldSize(width - height, height);
+        cellViewport.update(width, height, true);
+        uiViewport.update(width, height, true);
 
     }
 

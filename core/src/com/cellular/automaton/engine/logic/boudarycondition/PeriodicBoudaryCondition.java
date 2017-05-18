@@ -1,6 +1,5 @@
 package com.cellular.automaton.engine.logic.boudarycondition;
 
-import com.cellular.automaton.engine.logic.boudarycondition.BoundaryCondition;
 import com.cellular.automaton.engine.logic.Point;
 
 /**

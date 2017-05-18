@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * Created by marian on 05.05.17.
  */
-public class VonNeunammNeighbourhood extends Neighborhood {
+public class VonNewmanNeighbourhood extends Neighborhood {
+
     @Override
     public List<Cell> findNeighbors(List<List<Cell>> cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size) {
         List<Cell> neighbors = new ArrayList<>();
@@ -21,7 +22,7 @@ public class VonNeunammNeighbourhood extends Neighborhood {
                 Point position = new Point(i, j);
                 position = boundaryCondition.getPosition(position, size);
 
-                if( (currentCell.getPosition().x == i || currentCell.getPosition().y == j) || boundaryCondition.skip(position, size) ) {
+                if( (currentCell.getPosition().x != i && currentCell.getPosition().y != j) || (currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || boundaryCondition.skip(position, size) ) {
                     continue;
                 }
 
@@ -32,4 +33,5 @@ public class VonNeunammNeighbourhood extends Neighborhood {
 
         return neighbors;
     }
+
 }

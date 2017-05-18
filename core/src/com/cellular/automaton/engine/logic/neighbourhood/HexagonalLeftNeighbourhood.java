@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by marian on 06.05.17.
  */
-public class HaxagonalLeftNeighbourhood extends Neighborhood {
+public class HexagonalLeftNeighbourhood extends Neighborhood {
 
     @Override
     public List<Cell> findNeighbors(List<List<Cell>> cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size) {
@@ -22,7 +22,7 @@ public class HaxagonalLeftNeighbourhood extends Neighborhood {
                 Point position = new Point(i, j);
                 position = boundaryCondition.getPosition(position, size);
 
-                if( (position.x - 1 == i && position.y + 1  == j) || (position.x + 1 == i && position.y - 1 == j) || boundaryCondition.skip(position, size) ) {
+                if( (currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || (currentCell.getPosition().x == i - 1 && currentCell.getPosition().y == j - 1) || (currentCell.getPosition().x == i + 1 && currentCell.getPosition().y == j + 1) || boundaryCondition.skip(position, size) ) {
                     continue;
                 }
 

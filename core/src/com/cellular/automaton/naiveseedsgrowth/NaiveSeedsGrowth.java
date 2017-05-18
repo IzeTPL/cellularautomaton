@@ -1,7 +1,6 @@
 package com.cellular.automaton.naiveseedsgrowth;
 
 import com.cellular.automaton.engine.Application;
-import sun.net.www.ApplicationLaunchException;
 
 /**
  * Created by marian on 05.05.17.

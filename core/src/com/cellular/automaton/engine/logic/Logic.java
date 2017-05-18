@@ -1,7 +1,5 @@
 package com.cellular.automaton.engine.logic;
 
-import com.cellular.automaton.engine.logic.Board;
-
 import java.util.List;
 
 public abstract class Logic {
