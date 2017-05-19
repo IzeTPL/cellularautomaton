@@ -48,6 +48,7 @@ public abstract class Board {
             for (Cell cell : cellsRow) {
 
                 randomize(cell, random);
+                cell.update();
 
             }
 
@@ -90,7 +91,6 @@ public abstract class Board {
 
         if (random.nextInt( (int) ( (size.x * size.y) * 0.01f ) ) == 1) {
             cell.setNextState(State.ALIVE);
-            cell.update();
         }
 
     }

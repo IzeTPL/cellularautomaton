@@ -62,7 +62,7 @@ public class NaiveSeedsGrowthBoard extends Board {
 
         boolean test = cell.getColor().equals(Color.BLACK);
 
-        if(cell.getCurrentState() == State.ALIVE) {
+        if(cell.getNextState() == State.ALIVE && test) {
             cell.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1));
             cell.setCurrentState(State.ALIVE);
         }
@@ -127,8 +127,11 @@ public class NaiveSeedsGrowthBoard extends Board {
                         if(position.x >= size.x) position.x = 0;
                         if(position.y >= size.y) position.y = 0;
                         if(cells.get(position.x).get(position.y).getCurrentState() == State.ALIVE) inside = true;
+                        if(inside) break;
 
                     }
+
+                    if(inside) break;
 
                 }
 

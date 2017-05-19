@@ -26,6 +26,7 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
     private TextField widthField;
     private TextField heightField;
     private TextField seedField;
+    private TextField timeField;
     private Label widthLabel;
     private Label heightLabel;
     private Label seedLabel;
@@ -57,6 +58,7 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
         widthField = new TextField("500", textFieldStyle);
         heightField = new TextField("500", textFieldStyle);
         seedField = new TextField("5", textFieldStyle);
+        timeField = new TextField("1", textFieldStyle);
         seedField.setVisible(false);
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -207,7 +209,8 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
         table.add(seedLabel).expandX().fill();
         table.add(seedField).expandX().fill();
         table.row();
-        //table.add(continousSeeding).expandX().fill();
+        table.add(continousSeeding).expandX().fill();
+        table.add(timeField).expandX().fill();
 
         logic = new NaiveSeedsGrowthLogic(500,500);
 
@@ -232,13 +235,10 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
 
         if(!logic.isPaused()) {
             logic.iterate();
-        }
-
-        if(timer > 5 && continousSeeding.isChecked()) {
-
-            timer = 0;
-            logic.getBoard().seed();
-
+            if(timer > Integer.parseInt(timeField.getText()) && continousSeeding.isChecked() ) {
+                timer = 0;
+                logic.getBoard().seed();
+            }
         }
 
         handleInput();
