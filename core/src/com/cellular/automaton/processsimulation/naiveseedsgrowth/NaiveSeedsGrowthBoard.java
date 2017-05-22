@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class NaiveSeedsGrowthBoard extends Board {
 
-    protected List<Color> colors;
+    protected static int newID = 0;
 
     public NaiveSeedsGrowthBoard(int x, int y) {
 
@@ -25,15 +25,12 @@ public class NaiveSeedsGrowthBoard extends Board {
 
         for (int i = 0; i < size.x; i++) {
 
-            List<Cell> cellsRow = new ArrayList<>();
-
             for (int j = 0; j < size.y; j++) {
 
-                cellsRow.add(new NaiveSeedsGrowthCell(i, j));
+                cells.add(new NaiveSeedsGrowthCell(i, j));
 
             }
 
-            cells.add(cellsRow);
 
         }
 
@@ -42,15 +39,13 @@ public class NaiveSeedsGrowthBoard extends Board {
     @Override
     public void clear() {
 
-        for (List<Cell> cellsRow : cells) {
 
-            for ( Cell cell : cellsRow) {
+            for (Cell cell : cells) {
                 cell.setNextState(State.EMPTY);
                 cell.setNextColor(Color.BLACK);
                 cell.update();
             }
 
-        }
 
     }
 
@@ -59,7 +54,7 @@ public class NaiveSeedsGrowthBoard extends Board {
 
         super.randomize(cell, random);
 
-        boolean test = cell.getColor().equals(Color.BLACK);
+        boolean test = ( (NaiveSeedsGrowthCell) cell).getSeedID() == 0;
 
         if(cell.getNextState() == State.ALIVE && test) {
             Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
@@ -68,13 +63,15 @@ public class NaiveSeedsGrowthBoard extends Board {
             }
             cell.setColor(color);
             cell.setCurrentState(State.ALIVE);
+            ( (NaiveSeedsGrowthCell) cell).setSeedID(++newID);
+            NaiveSeedsGrowthCell.seedList.put(newID, color);
         }
 
     }
 
     public void swap(int x, int y) {
 
-        ( (NaiveSeedsGrowthCell) cells.get(x).get(y) ).swap();
+        ( (NaiveSeedsGrowthCell) cells.get(x*size.x+y) ).swap();
 
     }
 
@@ -85,15 +82,17 @@ public class NaiveSeedsGrowthBoard extends Board {
         int distanceY = 0;
 
 
-        for (List<Cell> cellsRow : cells) {
+        for (int i = 0; i < size.x; i++) {
 
             int distanceX = 0;
             if(distanceY == distance + 1) distanceY = 0;
-            for (Cell cell : cellsRow) {
+            for (int j = 0; j < size.y; j++) {
 
                 if(distanceX == distance + 1) distanceX = 0;
                 if (distanceX == distance && distanceY == distance) {
+                    Cell cell = cells.get(i*size.x+j);
                     cell.setNextState(State.ALIVE);
+                    ( (NaiveSeedsGrowthCell) cell).setSeedID(++newID);
                     cell.update();
                     if(cell.getCurrentState() == State.ALIVE ) {
                         cell.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1));
@@ -112,9 +111,8 @@ public class NaiveSeedsGrowthBoard extends Board {
 
         Random random = new Random();
         Point position;
-        for (List<Cell> cellsRow : cells) {
 
-            for (Cell cell : cellsRow) {
+            for (Cell cell : cells) {
 
                 boolean inside = false;
 
@@ -129,7 +127,7 @@ public class NaiveSeedsGrowthBoard extends Board {
                         if(position.y < 0) position.y = size.y - 1;
                         if(position.x >= size.x) position.x = 0;
                         if(position.y >= size.y) position.y = 0;
-                        if(cells.get(position.x).get(position.y).getCurrentState() == State.ALIVE) inside = true;
+                        if(cells.get(position.x*size.x+position.y).getCurrentState() == State.ALIVE) inside = true;
                         if(inside) break;
 
                     }
@@ -141,8 +139,6 @@ public class NaiveSeedsGrowthBoard extends Board {
                 if(!inside) {
                     randomize(cell, random);
                 }
-
-            }
 
         }
 

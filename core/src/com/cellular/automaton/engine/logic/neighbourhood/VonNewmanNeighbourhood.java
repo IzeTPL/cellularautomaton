@@ -13,7 +13,7 @@ import java.util.List;
 public class VonNewmanNeighbourhood extends Neighborhood {
 
     @Override
-    public List<Cell> findNeighbors(List<List<Cell>> cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size) {
+    public List<Cell> findNeighbors(List<Cell> cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size) {
         List<Cell> neighbors = new ArrayList<>();
 
         for (int i = currentCell.getPosition().x - 1; i <= currentCell.getPosition().x + 1; i++) {
@@ -26,7 +26,7 @@ public class VonNewmanNeighbourhood extends Neighborhood {
                     continue;
                 }
 
-                neighbors.add(cells.get(position.x).get(position.y));
+                neighbors.add(cells.get(position.x*size.x+position.y));
 
             }
         }

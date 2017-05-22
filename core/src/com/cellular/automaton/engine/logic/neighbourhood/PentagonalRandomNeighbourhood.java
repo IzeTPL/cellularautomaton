@@ -14,7 +14,7 @@ import java.util.Random;
 public class PentagonalRandomNeighbourhood extends Neighborhood {
 
     @Override
-    public List<Cell> findNeighbors(List<List<Cell>> cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size) {
+    public List<Cell> findNeighbors(List<Cell> cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size) {
         List<Cell> neighbors = new ArrayList<>();
         Random random = new Random();
         boolean[] skip = new boolean[8];
@@ -43,7 +43,7 @@ public class PentagonalRandomNeighbourhood extends Neighborhood {
                     continue;
                 }
 
-                neighbors.add(cells.get(position.x).get(position.y));
+                neighbors.add(cells.get(position.x*size.x+position.y));
 
             }
         }

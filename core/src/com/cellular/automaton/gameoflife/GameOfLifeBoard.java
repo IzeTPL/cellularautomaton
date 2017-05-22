@@ -20,15 +20,11 @@ public class GameOfLifeBoard extends Board {
 
             for (int i = 0; i < size.x; i++) {
 
-                List<Cell> cellsRow = new ArrayList<>();
-
                 for (int j = 0; j < size.y; j++) {
 
-                    cellsRow.add(new GameOfLifeCell(i, j));
+                    cells.add(new GameOfLifeCell(i, j));
 
                 }
-
-                cells.add(cellsRow);
 
             }
 
@@ -36,7 +32,7 @@ public class GameOfLifeBoard extends Board {
 
     public void swap(int x, int y) {
 
-        ( (GameOfLifeCell) cells.get(x).get(y) ).swap();
+        ( (GameOfLifeCell) cells.get(x*size.x+y) ).swap();
 
     }
 

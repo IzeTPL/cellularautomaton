@@ -33,7 +33,7 @@ public class DynamicRecrystallizationBoard extends Board {
 
             }
 
-            cells.add(cellsRow);
+            //cells.add(cellsRow);
 
         }
 
@@ -42,15 +42,14 @@ public class DynamicRecrystallizationBoard extends Board {
     @Override
     public void clear() {
 
-        for (List<Cell> cellsRow : cells) {
 
-            for ( Cell cell : cellsRow) {
+
+            for ( Cell cell : cells) {
                 cell.setNextState(State.EMPTY);
                 cell.setNextColor(Color.BLACK);
                 cell.update();
             }
 
-        }
 
     }
 
@@ -74,11 +73,11 @@ public class DynamicRecrystallizationBoard extends Board {
 
     public void swap(int x, int y) {
 
-        ( (DynamicRecrystallizationCell) cells.get(x).get(y) ).swap();
+       // ( (DynamicRecrystallizationCell) cells.get(x).get(y) ).swap();
 
     }
 
-    public void seed(int distance) {
+   /* public void seed(int distance) {
 
         Random random = new Random();
 
@@ -146,6 +145,6 @@ public class DynamicRecrystallizationBoard extends Board {
 
         }
 
-    }
+    }*/
 
 }

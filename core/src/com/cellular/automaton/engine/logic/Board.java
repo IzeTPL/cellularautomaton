@@ -18,7 +18,7 @@ import java.util.Random;
 public abstract class Board {
 
     protected Point size;
-    protected List< List<Cell> > cells;
+    protected List<Cell> cells;
     protected List<BoundaryCondition> boundaryConditions;
     protected List<Neighborhood> neighborhoods;
 
@@ -43,29 +43,24 @@ public abstract class Board {
     public void seed() {
 
         Random random = new Random();
-        for (List<Cell> cellsRow : cells) {
 
-            for (Cell cell : cellsRow) {
+            for (Cell cell : cells) {
 
                 randomize(cell, random);
                 cell.update();
 
             }
 
-        }
 
     }
 
     public void clear() {
 
-        for (List<Cell> cellsRow : cells) {
 
-            for ( Cell cell : cellsRow) {
+            for (Cell cell : cells) {
                  cell.setNextState(State.EMPTY);
                  cell.update();
             }
-
-        }
 
     }
 
@@ -76,16 +71,14 @@ public abstract class Board {
 
         Pixmap board = new Pixmap(size.x, size.y, Pixmap.Format.RGBA8888);
 
-        for (List<Cell> cellsRow: cells) {
 
-            for (Cell cell : cellsRow) {
+            for (Cell cell : cells) {
 
                 board.setColor(cell.getColor());
                 board.drawPixel(cell.getPosition().x, cell.getPosition().y);
 
             }
 
-        }
 
         Texture texture = new Texture(board);
 
@@ -105,15 +98,12 @@ public abstract class Board {
 
     public void setNeighbourhood(Neighborhood neighbourhood, BoundaryCondition boundaryCondition) {
 
-        for(List<Cell> cellsRow : cells) {
 
-            for (Cell cell : cellsRow) {
+            for (Cell cell : cells) {
 
                 cell.neighbors = neighbourhood.findNeighbors(cells, cell, boundaryCondition, size);
 
             }
-
-        }
 
     }
 

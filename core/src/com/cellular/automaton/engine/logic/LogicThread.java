@@ -10,9 +10,9 @@ import java.util.List;
  */
 public class LogicThread extends Thread {
 
-    private List< List<Cell> > cells = new ArrayList<>();
+    private List<Cell> cells = new ArrayList<>();
 
-    public LogicThread(List< List<Cell> > cells) {
+    public LogicThread(List<Cell> cells) {
 
         super();
         this.cells = cells;
@@ -21,17 +21,13 @@ public class LogicThread extends Thread {
 
     public void run() {
 
-        for (List<Cell> cellsRow: cells) {
-            for (Cell cell : cellsRow) {
+            for (Cell cell : cells) {
                 cell.checkNeighbors();
             }
-        }
 
-        for (List<Cell> cellsRow: cells) {
-            for (Cell cell : cellsRow) {
+            for (Cell cell : cells) {
                 cell.update();
             }
-        }
 
     }
 

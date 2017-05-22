@@ -214,7 +214,7 @@ public class SimulationScreen extends AbstractScreen {
         table.add(continousSeeding).expandX().fill();
         table.add(timeField).expandX().fill();
 
-        logic = new NaiveSeedsGrowthLogic(1000,1000);
+        logic = new NaiveSeedsGrowthLogic(500,500);
 
         logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
 

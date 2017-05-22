@@ -11,6 +11,6 @@ import java.util.List;
  */
 public abstract class Neighborhood {
 
-    public abstract List<Cell> findNeighbors(List< List<Cell> > cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size);
+    public abstract List<Cell> findNeighbors(List<Cell> cells, Cell currentCell, BoundaryCondition boundaryCondition, Point size);
 
 }

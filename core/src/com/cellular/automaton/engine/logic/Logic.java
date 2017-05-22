@@ -26,20 +26,20 @@ public abstract class Logic {
 
         for (int i = 0; i < threadsNum; i++) {
 
-            if(board.size.x % threadsNum == 0) {
+            if(board.size.x*board.size.y % threadsNum == 0) {
 
-                end += board.size.x / threadsNum;
+                end += board.size.x*board.size.y / threadsNum;
 
             } else {
 
-                end += (board.size.x / threadsNum) + 1;
+                end += (board.size.x*board.size.y / threadsNum) + 1;
 
             }
 
             int warunek = (end - start) * (i + 1);
 
-            if(warunek > board.size.x) {
-                end -= (warunek  - board.size.x);
+            if(warunek > board.size.x*board.size.y) {
+                end -= (warunek  - board.size.x*board.size.y);
             }
 
             threads[i] = new LogicThread(board.cells.subList(start,end));
@@ -58,7 +58,7 @@ public abstract class Logic {
 
         }
 
-        //long endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
 
         //System.out.println((endTime - startTime));
 

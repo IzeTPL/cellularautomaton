@@ -13,10 +13,18 @@ import java.util.Random;
  */
 public class NaiveSeedsGrowthCell extends Cell {
 
+    protected Integer seedID;
+    protected Integer nextSeedID;
+    protected static HashMap<Integer, Color> seedList;
+
     public NaiveSeedsGrowthCell(int x, int y) {
 
         super(x, y);
-        nextColor = new Color(Color.GOLD);
+        seedID = 0;
+        color = new Color(Color.BLACK);
+        nextColor = new Color(Color.BLACK);
+        seedList = new HashMap<>();
+
 
     }
 
@@ -25,31 +33,30 @@ public class NaiveSeedsGrowthCell extends Cell {
 
         if(currentState == State.EMPTY) {
 
-            HashMap<Color, Integer> colors = new HashMap<>();
+            HashMap<Integer, Integer> neighborSeeds = new HashMap<>();
 
             for (Cell cell : neighbors) {
 
-                if(colors.containsKey(cell.getColor())) {
+                if(neighborSeeds.containsKey(((NaiveSeedsGrowthCell) cell).getSeedID())) {
 
-                    colors.replace(cell.getColor(), colors.get(cell.getColor()), colors.get(cell.getColor()) + 1);
+                    neighborSeeds.replace(((NaiveSeedsGrowthCell) cell).getSeedID(), neighborSeeds.get(((NaiveSeedsGrowthCell) cell).getSeedID()), neighborSeeds.get(((NaiveSeedsGrowthCell) cell).getSeedID()) + 1);
 
                 } else {
 
-                    colors.put(cell.getColor(), 1);
+                    neighborSeeds.put(((NaiveSeedsGrowthCell) cell).getSeedID(), 1);
 
                 }
 
             }
 
             int max = -1;
-            Color color = new Color(0.5f,0.5f,0.5f,1);
 
-            for (Map.Entry<Color, Integer> entry : colors.entrySet())
+            for (Map.Entry<Integer, Integer> entry : neighborSeeds.entrySet())
             {
-                if(entry.getValue() > max && !entry.getKey().equals(Color.BLACK) ) {
+                if(entry.getValue() > max && !entry.getKey().equals(0) ) {
 
                     max = entry.getValue();
-                    color = entry.getKey();
+                    nextSeedID = entry.getKey();
 
                 }
 
@@ -57,7 +64,7 @@ public class NaiveSeedsGrowthCell extends Cell {
 
             if(max != -1) {
 
-                nextColor = color;
+                nextColor = seedList.get(nextSeedID);
                 nextState = State.ALIVE;
 
             }
@@ -73,8 +80,18 @@ public class NaiveSeedsGrowthCell extends Cell {
     @Override
     public void update() {
 
-        if(currentState == State.EMPTY) color = Color.BLACK;
-        if( (currentState == State.EMPTY && nextState == State.ALIVE) || (nextState == State.EMPTY && currentState == State.ALIVE)) color = nextColor;
+        if(currentState == State.EMPTY) {
+
+            color = Color.BLACK;
+            seedID = 0;
+
+        }
+        if( (currentState == State.EMPTY && nextState == State.ALIVE) || (nextState == State.EMPTY && currentState == State.ALIVE) ) {
+
+            color = nextColor;
+            seedID = nextSeedID;
+
+        }
 
         super.update();
 
@@ -85,15 +102,32 @@ public class NaiveSeedsGrowthCell extends Cell {
         Random random = new Random();
 
         if(currentState == State.ALIVE) {
-            setNextState(State.EMPTY);
+            nextState = State.EMPTY;
             nextColor = Color.BLACK;
+            nextSeedID = 0;
         } else {
-            setNextState(State.ALIVE);
+            nextState = State.ALIVE;
             nextColor = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
+            nextSeedID = ++NaiveSeedsGrowthBoard.newID;
         }
 
         update();
 
     }
 
+    public Integer getSeedID() {
+        return seedID;
+    }
+
+    public void setSeedID(Integer seedID) {
+        this.seedID = seedID;
+    }
+
+    public Integer getNextSeedID() {
+        return nextSeedID;
+    }
+
+    public void setNextSeedID(Integer nextSeedID) {
+        this.nextSeedID = nextSeedID;
+    }
 }
