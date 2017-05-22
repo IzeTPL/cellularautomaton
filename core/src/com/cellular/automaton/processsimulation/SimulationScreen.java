@@ -1,4 +1,4 @@
-package com.cellular.automaton.naiveseedsgrowth;
+package com.cellular.automaton.processsimulation;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,11 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cellular.automaton.engine.Application;
 import com.cellular.automaton.engine.render.AbstractScreen;
 import com.cellular.automaton.engine.render.DrawableColor;
+import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthBoard;
+import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthLogic;
 
 /**
  * Created by marian on 06.05.17.
  */
-public class NaiveSeedsGrowthScreen extends AbstractScreen {
+public class SimulationScreen extends AbstractScreen {
 
     private TextField widthField;
     private TextField heightField;
@@ -40,7 +42,7 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
     private SelectBox<String> boundaryConditionSelection;
     private SelectBox<String> seedTypeSelection;
 
-    public NaiveSeedsGrowthScreen(Application application) {
+    public SimulationScreen(Application application) {
 
         super(application);
         this.application = application;
@@ -212,7 +214,7 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
         table.add(continousSeeding).expandX().fill();
         table.add(timeField).expandX().fill();
 
-        logic = new NaiveSeedsGrowthLogic(500,500);
+        logic = new NaiveSeedsGrowthLogic(1000,1000);
 
         logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
 
@@ -235,15 +237,13 @@ public class NaiveSeedsGrowthScreen extends AbstractScreen {
 
         if(!logic.isPaused()) {
             logic.iterate();
-            if(timer > Integer.parseInt(timeField.getText()) && continousSeeding.isChecked() ) {
+            if(timer > Float.parseFloat(timeField.getText()) && continousSeeding.isChecked() ) {
                 timer = 0;
                 logic.getBoard().seed();
             }
         }
 
         handleInput();
-
-        logic.getBoard().draw(shapeRenderer, cellCamera);
 
     }
 

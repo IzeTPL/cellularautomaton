@@ -14,6 +14,7 @@ public abstract class Cell implements ICell {
     protected Point position;
     protected List<Cell> neighbors;
     protected Color color;
+    protected Color nextColor;
 
     public Cell(int x, int y) {
 
@@ -25,7 +26,7 @@ public abstract class Cell implements ICell {
     }
 
     @Override
-    public abstract void checkNeighbors();
+    public abstract boolean checkNeighbors();
 
     @Override
     public void update() {
@@ -66,5 +67,17 @@ public abstract class Cell implements ICell {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Color getNextColor() {
+        return nextColor;
+    }
+
+    public void setNextColor(Color nextColor) {
+        this.nextColor = nextColor;
+    }
+
+    public List<Cell> getNeighbors() {
+        return neighbors;
     }
 }

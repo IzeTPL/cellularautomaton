@@ -1,8 +1,8 @@
 package com.cellular.automaton.engine.logic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.cellular.automaton.engine.logic.boudarycondition.BoundaryCondition;
 import com.cellular.automaton.engine.logic.boudarycondition.FixedBoundaryCondition;
 import com.cellular.automaton.engine.logic.boudarycondition.PeriodicBoudaryCondition;
@@ -69,21 +69,29 @@ public abstract class Board {
 
     }
 
-    public void draw(ShapeRenderer shapeRenderer, Camera camera) {
+    public Texture draw() {
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        float width = Gdx.graphics.getHeight() / size.x;
+        float height = Gdx.graphics.getHeight() / size.y;
+
+        Pixmap board = new Pixmap(size.x, size.y, Pixmap.Format.RGBA8888);
+
         for (List<Cell> cellsRow: cells) {
 
             for (Cell cell : cellsRow) {
 
-                shapeRenderer.setColor(cell.getColor());
-                shapeRenderer.rect(cell.getPosition().x * Gdx.graphics.getHeight() / size.x,Gdx.graphics.getHeight() - cell.getPosition().y * Gdx.graphics.getHeight() / size.y - Gdx.graphics.getHeight() / size.y,Gdx.graphics.getHeight() / size.x, Gdx.graphics.getHeight() / size.y );
+                board.setColor(cell.getColor());
+                board.drawPixel(cell.getPosition().x, cell.getPosition().y);
+
             }
 
         }
 
-        shapeRenderer.end();
+        Texture texture = new Texture(board);
+
+        board.dispose();
+
+        return texture;
 
     }
 
@@ -106,6 +114,13 @@ public abstract class Board {
             }
 
         }
+
+    }
+
+    public int getGreaterDimesion() {
+
+        if(size.x > size.y) return size.x;
+        return size.y;
 
     }
 

@@ -2,7 +2,7 @@ package com.cellular.automaton.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.cellular.automaton.naiveseedsgrowth.NaiveSeedsGrowth;
+import com.cellular.automaton.processsimulation.Simulation;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
@@ -10,8 +10,7 @@ public class DesktopLauncher {
 		config.width = 800;
 		config.height = 500;
 		config.resizable = true;
-		config.foregroundFPS = 60;
 		config.vSyncEnabled = false;
-		new LwjglApplication(new NaiveSeedsGrowth(), config);
+		new LwjglApplication(new Simulation(), config);
 	}
 }

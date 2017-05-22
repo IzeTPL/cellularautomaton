@@ -1,11 +1,10 @@
-package com.cellular.automaton.naiveseedsgrowth;
+package com.cellular.automaton.processsimulation.naiveseedsgrowth;
 
 import com.badlogic.gdx.graphics.Color;
 import com.cellular.automaton.engine.logic.Board;
 import com.cellular.automaton.engine.logic.Cell;
 import com.cellular.automaton.engine.logic.Point;
 import com.cellular.automaton.engine.logic.State;
-import com.cellular.automaton.engine.logic.boudarycondition.BoundaryCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class NaiveSeedsGrowthBoard extends Board {
 
             for ( Cell cell : cellsRow) {
                 cell.setNextState(State.EMPTY);
-                ( (NaiveSeedsGrowthCell) cell).setNextColor(Color.BLACK);
+                cell.setNextColor(Color.BLACK);
                 cell.update();
             }
 
@@ -63,7 +62,11 @@ public class NaiveSeedsGrowthBoard extends Board {
         boolean test = cell.getColor().equals(Color.BLACK);
 
         if(cell.getNextState() == State.ALIVE && test) {
-            cell.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1));
+            Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
+            while((color.r + color.g + color.a) < 0.5f) {
+                color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
+            }
+            cell.setColor(color);
             cell.setCurrentState(State.ALIVE);
         }
 

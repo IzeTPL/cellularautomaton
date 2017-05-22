@@ -1,4 +1,4 @@
-package com.cellular.automaton.naiveseedsgrowth;
+package com.cellular.automaton.processsimulation.naiveseedsgrowth;
 
 import com.badlogic.gdx.graphics.Color;
 import com.cellular.automaton.engine.logic.Cell;
@@ -13,8 +13,6 @@ import java.util.Random;
  */
 public class NaiveSeedsGrowthCell extends Cell {
 
-    private Color nextColor;
-
     public NaiveSeedsGrowthCell(int x, int y) {
 
         super(x, y);
@@ -23,7 +21,7 @@ public class NaiveSeedsGrowthCell extends Cell {
     }
 
     @Override
-    public void checkNeighbors() {
+    public boolean checkNeighbors() {
 
         if(currentState == State.EMPTY) {
 
@@ -64,7 +62,11 @@ public class NaiveSeedsGrowthCell extends Cell {
 
             }
 
+            return true;
+
         }
+
+        return false;
 
     }
 
@@ -94,11 +96,4 @@ public class NaiveSeedsGrowthCell extends Cell {
 
     }
 
-    public void setNextColor(Color nextColor) {
-        this.nextColor = nextColor;
-    }
-
-    public Color getNextColor() {
-        return nextColor;
-    }
 }

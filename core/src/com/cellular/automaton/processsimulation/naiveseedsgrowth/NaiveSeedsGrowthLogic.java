@@ -1,4 +1,4 @@
-package com.cellular.automaton.naiveseedsgrowth;
+package com.cellular.automaton.processsimulation.naiveseedsgrowth;
 
 import com.cellular.automaton.engine.logic.Logic;
 

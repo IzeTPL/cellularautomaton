@@ -15,7 +15,7 @@ public class GameOfLifeCell extends Cell {
     }
 
     @Override
-    public void checkNeighbors() {
+    public boolean checkNeighbors() {
 
         int aliveCellsCount = 0;
 
@@ -27,6 +27,8 @@ public class GameOfLifeCell extends Cell {
             nextState = State.ALIVE;
         else
             nextState = State.EMPTY;
+
+        return false;
 
     }
 

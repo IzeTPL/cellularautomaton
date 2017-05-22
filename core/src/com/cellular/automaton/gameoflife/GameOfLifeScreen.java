@@ -102,7 +102,7 @@ public class GameOfLifeScreen extends AbstractScreen{
 
         handleInput();
 
-        logic.getBoard().draw(shapeRenderer, cellCamera);
+        logic.getBoard().draw();
 
     }
 

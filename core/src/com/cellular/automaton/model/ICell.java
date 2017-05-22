@@ -5,7 +5,7 @@ package com.cellular.automaton.model;
  */
 public interface ICell {
 
-    void checkNeighbors();
+    boolean checkNeighbors();
 
     void update();
 

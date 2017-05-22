@@ -6,6 +6,7 @@ package com.cellular.automaton.engine.logic;
 public enum State {
 
     EMPTY,
-    ALIVE
+    ALIVE,
+    RECRYSTALLIZED
 
 }

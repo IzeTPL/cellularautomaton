@@ -2,10 +2,7 @@ package com.cellular.automaton.engine.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -26,7 +23,6 @@ public abstract class AbstractScreen implements Screen {
     protected Viewport cellViewport;
     protected Viewport uiViewport;
 
-    protected ShapeRenderer shapeRenderer;
     protected Stage stage;
 
     protected Table root;
@@ -45,7 +41,6 @@ public abstract class AbstractScreen implements Screen {
 
         cellCamera.position.set(cellViewport.getWorldWidth()/2, cellViewport.getWorldHeight()/2, 0);
         uiCamera.position.set(uiViewport.getWorldWidth()/2, uiViewport.getWorldHeight()/2, 0);
-        shapeRenderer = new ShapeRenderer();
 
         stage = new Stage(uiViewport, this.application.getSpriteBatch());
 
@@ -69,6 +64,7 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void render(float delta) {
 
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -83,7 +79,13 @@ public abstract class AbstractScreen implements Screen {
         cellViewport.setScreenBounds(Gdx.graphics.getWidth() - Gdx.graphics.getHeight(),0, Gdx.graphics.getHeight(), Gdx.graphics.getHeight());
         cellViewport.apply();
         application.getSpriteBatch().setProjectionMatrix(cellCamera.combined);
-
+        application.getSpriteBatch().begin();
+        float width = (float)Gdx.graphics.getHeight() / ( (float)logic.getBoard().getGreaterDimesion()/(float)logic.getBoard().getSize().x);
+        float height = (float)Gdx.graphics.getHeight() / ( (float)logic.getBoard().getGreaterDimesion()/(float)logic.getBoard().getSize().y);
+        Texture texture = logic.getBoard().draw();
+        application.getSpriteBatch().draw(texture, 0, Gdx.graphics.getHeight() - height, width, height);
+        application.getSpriteBatch().end();
+        texture.dispose();
         Gdx.input.setInputProcessor(stage);
 
     }
@@ -92,8 +94,8 @@ public abstract class AbstractScreen implements Screen {
     public void resize(int width, int height) {
 
         cellViewport.setWorldSize(height, height);
-        uiViewport.setWorldSize(width - height, height);
         cellViewport.update(width, height, true);
+        uiViewport.setWorldSize(width - height, height);
         uiViewport.update(width, height, true);
 
     }
@@ -117,6 +119,7 @@ public abstract class AbstractScreen implements Screen {
     public void dispose() {
 
         application.dispose();
+        stage.dispose();
 
     }
 
