@@ -39,7 +39,7 @@ public abstract class Logic {
             int warunek = (end - start) * (i + 1);
 
             if(warunek > board.size.x*board.size.y) {
-                end -= (warunek  - board.size.x*board.size.y);
+                end -= (warunek  - board.size.x * board.size.y);
             }
 
             threads[i] = new LogicThread(board.cells.subList(start,end));

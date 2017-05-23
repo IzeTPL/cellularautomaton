@@ -118,6 +118,14 @@ public abstract class Board {
         return size;
     }
 
+    public List<Cell> getCells() {
+        return cells;
+    }
+
+    public void setCells(List<Cell> cells) {
+        this.cells = cells;
+    }
+
     public List<BoundaryCondition> getBoundaryConditions() {
         return boundaryConditions;
     }

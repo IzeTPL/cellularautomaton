@@ -5,9 +5,8 @@ import com.cellular.automaton.engine.logic.Board;
 import com.cellular.automaton.engine.logic.Cell;
 import com.cellular.automaton.engine.logic.Point;
 import com.cellular.automaton.engine.logic.State;
+import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthCell;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -15,7 +14,7 @@ import java.util.Random;
  */
 public class DynamicRecrystallizationBoard extends Board {
 
-    protected List<Color> colors;
+    protected static int newID = 0;
 
     public DynamicRecrystallizationBoard(int x, int y) {
 
@@ -25,15 +24,12 @@ public class DynamicRecrystallizationBoard extends Board {
 
         for (int i = 0; i < size.x; i++) {
 
-            List<Cell> cellsRow = new ArrayList<>();
-
             for (int j = 0; j < size.y; j++) {
 
-                cellsRow.add(new DynamicRecrystallizationCell(i, j));
+                cells.add(new NaiveSeedsGrowthCell(i, j));
 
             }
 
-            //cells.add(cellsRow);
 
         }
 
@@ -43,8 +39,7 @@ public class DynamicRecrystallizationBoard extends Board {
     public void clear() {
 
 
-
-            for ( Cell cell : cells) {
+            for (Cell cell : cells) {
                 cell.setNextState(State.EMPTY);
                 cell.setNextColor(Color.BLACK);
                 cell.update();
@@ -58,7 +53,7 @@ public class DynamicRecrystallizationBoard extends Board {
 
         super.randomize(cell, random);
 
-        boolean test = cell.getColor().equals(Color.BLACK);
+        boolean test = ( (NaiveSeedsGrowthCell) cell).getSeedID() == 0;
 
         if(cell.getNextState() == State.ALIVE && test) {
             Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
@@ -67,32 +62,36 @@ public class DynamicRecrystallizationBoard extends Board {
             }
             cell.setColor(color);
             cell.setCurrentState(State.ALIVE);
+            ( (DynamicRecrystallizationCell) cell).setSeedID(++newID);
+            DynamicRecrystallizationCell.seedList.put(newID, color);
         }
 
     }
 
     public void swap(int x, int y) {
 
-       // ( (DynamicRecrystallizationCell) cells.get(x).get(y) ).swap();
+        ( (NaiveSeedsGrowthCell) cells.get(x*size.x+y) ).swap();
 
     }
 
-   /* public void seed(int distance) {
+    public void seed(int distance) {
 
         Random random = new Random();
 
         int distanceY = 0;
 
 
-        for (List<Cell> cellsRow : cells) {
+        for (int i = 0; i < size.x; i++) {
 
             int distanceX = 0;
             if(distanceY == distance + 1) distanceY = 0;
-            for (Cell cell : cellsRow) {
+            for (int j = 0; j < size.y; j++) {
 
                 if(distanceX == distance + 1) distanceX = 0;
                 if (distanceX == distance && distanceY == distance) {
+                    Cell cell = cells.get(i*size.x+j);
                     cell.setNextState(State.ALIVE);
+                    ( (NaiveSeedsGrowthCell) cell).setSeedID(++newID);
                     cell.update();
                     if(cell.getCurrentState() == State.ALIVE ) {
                         cell.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1));
@@ -111,9 +110,8 @@ public class DynamicRecrystallizationBoard extends Board {
 
         Random random = new Random();
         Point position;
-        for (List<Cell> cellsRow : cells) {
 
-            for (Cell cell : cellsRow) {
+            for (Cell cell : cells) {
 
                 boolean inside = false;
 
@@ -128,7 +126,7 @@ public class DynamicRecrystallizationBoard extends Board {
                         if(position.y < 0) position.y = size.y - 1;
                         if(position.x >= size.x) position.x = 0;
                         if(position.y >= size.y) position.y = 0;
-                        if(cells.get(position.x).get(position.y).getCurrentState() == State.ALIVE) inside = true;
+                        if(cells.get(position.x*size.x+position.y).getCurrentState() == State.ALIVE) inside = true;
                         if(inside) break;
 
                     }
@@ -141,10 +139,8 @@ public class DynamicRecrystallizationBoard extends Board {
                     randomize(cell, random);
                 }
 
-            }
-
         }
 
-    }*/
+    }
 
 }

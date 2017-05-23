@@ -1,5 +1,6 @@
 package com.cellular.automaton.processsimulation.dynamicrecrystallization;
 
+import com.cellular.automaton.engine.logic.Cell;
 import com.cellular.automaton.engine.logic.Logic;
 
 /**
@@ -8,7 +9,6 @@ import com.cellular.automaton.engine.logic.Logic;
 public class DynamicRecrystallizationLogic extends Logic {
 
     double time = 0;
-    double ro1 = 0;
 
     public DynamicRecrystallizationLogic(int x, int y) {
 
@@ -20,15 +20,23 @@ public class DynamicRecrystallizationLogic extends Logic {
     @Override
     public void iterate() {
 
-        double ro2 = ro1;
+        double ro1 = DynamicRecrystallizationCell.globalRo;
 
-        ro1 = (86710969050178.5 / 9.41268203527779) + (1 - (86710969050178.5 / 9.41268203527779) ) * Math.exp(-9.41268203527779/time);
+        DynamicRecrystallizationCell.globalRo = (86710969050178.5 / 9.41268203527779) + (1 - (86710969050178.5 / 9.41268203527779) ) * Math.exp(-9.41268203527779*time);
 
         time += 0.001;
 
-        double cellRo = (ro1 - ro2) / (board.getSize().x * board.getSize().y);
+        DynamicRecrystallizationCell.roPerCell = (DynamicRecrystallizationCell.globalRo - ro1) / (board.getSize().x * board.getSize().y);
 
         super.iterate();
+
+        for (Cell cell : board.getCells()) {
+
+            DynamicRecrystallizationCell dynamicRecrystallizationCell = (DynamicRecrystallizationCell) cell;
+            dynamicRecrystallizationCell.addRest(DynamicRecrystallizationCell.rest/1000);
+
+        }
+
     }
 
     @Override

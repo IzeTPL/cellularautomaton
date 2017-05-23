@@ -38,6 +38,7 @@ public class SimulationScreen extends AbstractScreen {
     private Button clearButton;
     private Button nextButton;
     private Button resizeButton;
+    private Button recrystallizeButton;
     private SelectBox<String> neighbourhoodSelection;
     private SelectBox<String> boundaryConditionSelection;
     private SelectBox<String> seedTypeSelection;
@@ -90,12 +91,14 @@ public class SimulationScreen extends AbstractScreen {
         clearButton = new TextButton("Clear", textButtonStyle);
         nextButton = new TextButton("Next", textButtonStyle);
         resizeButton = new TextButton("Resize", textButtonStyle);
+        recrystallizeButton = new TextButton("Recrystallize", textButtonStyle);
 
         seedButton.addListener(new ClickListener());
         toggleButton.addListener(new ClickListener());
         clearButton.addListener(new ClickListener());
         nextButton.addListener(new ClickListener());
         resizeButton.addListener(new ClickListener());
+        recrystallizeButton.addListener(new ClickListener());
 
         SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle();
         selectBoxStyle.font = new BitmapFont();
@@ -213,6 +216,8 @@ public class SimulationScreen extends AbstractScreen {
         table.row();
         table.add(continousSeeding).expandX().fill();
         table.add(timeField).expandX().fill();
+        table.row();
+        table.add(recrystallizeButton);
 
         logic = new NaiveSeedsGrowthLogic(500,500);
 
