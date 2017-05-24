@@ -1,6 +1,7 @@
 package com.cellular.automaton.engine.logic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.cellular.automaton.engine.logic.boudarycondition.BoundaryCondition;
@@ -64,7 +65,7 @@ public abstract class Board {
 
     }
 
-    public Texture draw() {
+    public Texture draw(boolean progress) {
 
         float width = Gdx.graphics.getHeight() / size.x;
         float height = Gdx.graphics.getHeight() / size.y;
@@ -72,9 +73,16 @@ public abstract class Board {
         Pixmap board = new Pixmap(size.x, size.y, Pixmap.Format.RGBA8888);
 
 
+
             for (Cell cell : cells) {
 
-                board.setColor(cell.getColor());
+                if(progress) {
+                    if(cell.getCurrentState() == State.EMPTY) board.setColor(Color.BLACK);
+                    else if(cell.getCurrentState() == State.ALIVE) board.setColor(Color.WHITE);
+                    else board.setColor(Color.BLUE);
+                } else {
+                    board.setColor(cell.getColor());
+                }
                 board.drawPixel(cell.getPosition().x, cell.getPosition().y);
 
             }
@@ -133,4 +141,6 @@ public abstract class Board {
     public List<Neighborhood> getNeighborhoods() {
         return neighborhoods;
     }
+
+
 }

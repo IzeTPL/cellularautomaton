@@ -2,10 +2,12 @@ package com.cellular.automaton.engine;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.cellular.automaton.engine.logic.Board;
 
 public abstract class Application extends Game {
 
     protected SpriteBatch spriteBatch;
+    protected Board board;
 
     @Override
     public void create () {

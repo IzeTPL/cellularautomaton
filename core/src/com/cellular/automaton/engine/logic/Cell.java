@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by marian on 26.04.17.
  */
-public abstract class Cell implements ICell {
+public class Cell implements ICell {
 
     protected State currentState;
     protected State nextState;
@@ -26,7 +26,11 @@ public abstract class Cell implements ICell {
     }
 
     @Override
-    public abstract boolean checkNeighbors();
+    public boolean checkNeighbors() {
+
+        return false;
+
+    }
 
     @Override
     public void update() {

@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cellular.automaton.engine.Application;
 import com.cellular.automaton.engine.render.AbstractScreen;
 import com.cellular.automaton.engine.render.DrawableColor;
+import com.cellular.automaton.processsimulation.dynamicrecrystallization.DynamicRecrystallizationLogic;
+import com.cellular.automaton.processsimulation.montecarlo.MonteCarloLogic;
 import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthBoard;
 import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthLogic;
 
@@ -33,15 +35,21 @@ public class SimulationScreen extends AbstractScreen {
     private Label heightLabel;
     private Label seedLabel;
     private CheckBox continousSeeding;
+    private CheckBox showProgress;
     private Button seedButton;
     private Button toggleButton;
     private Button clearButton;
     private Button nextButton;
     private Button resizeButton;
     private Button recrystallizeButton;
+    private Button monteCarloButton;
     private SelectBox<String> neighbourhoodSelection;
     private SelectBox<String> boundaryConditionSelection;
     private SelectBox<String> seedTypeSelection;
+
+    private NaiveSeedsGrowthLogic naiveSeedsGrowthLogic;
+    private DynamicRecrystallizationLogic dynamicRecrystallizationLogic;
+    private MonteCarloLogic monteCarloLogic;
 
     public SimulationScreen(Application application) {
 
@@ -85,6 +93,7 @@ public class SimulationScreen extends AbstractScreen {
         CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(drawable1, drawable2, new BitmapFont(), Color.WHITE);
 
         continousSeeding = new CheckBox("Continous seeding", checkBoxStyle);
+        showProgress = new CheckBox("Show progress", checkBoxStyle);
 
         seedButton = new TextButton("Seed", textButtonStyle);
         toggleButton = new TextButton("Play", textButtonStyle);
@@ -92,6 +101,7 @@ public class SimulationScreen extends AbstractScreen {
         nextButton = new TextButton("Next", textButtonStyle);
         resizeButton = new TextButton("Resize", textButtonStyle);
         recrystallizeButton = new TextButton("Recrystallize", textButtonStyle);
+        monteCarloButton = new TextButton("Monte Carlo", textButtonStyle);
 
         seedButton.addListener(new ClickListener());
         toggleButton.addListener(new ClickListener());
@@ -99,6 +109,7 @@ public class SimulationScreen extends AbstractScreen {
         nextButton.addListener(new ClickListener());
         resizeButton.addListener(new ClickListener());
         recrystallizeButton.addListener(new ClickListener());
+        monteCarloButton.addListener(new ClickListener());
 
         SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle();
         selectBoxStyle.font = new BitmapFont();
@@ -217,9 +228,14 @@ public class SimulationScreen extends AbstractScreen {
         table.add(continousSeeding).expandX().fill();
         table.add(timeField).expandX().fill();
         table.row();
-        table.add(recrystallizeButton);
+        table.add(recrystallizeButton).expandX().fill();
+        table.add(showProgress).expandX().fill();
+        table.row();
+        table.add(monteCarloButton).expandX().fill();
 
-        logic = new NaiveSeedsGrowthLogic(500,500);
+        naiveSeedsGrowthLogic = new NaiveSeedsGrowthLogic(500,500);
+        logic = naiveSeedsGrowthLogic;
+
 
         logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
 
@@ -237,6 +253,8 @@ public class SimulationScreen extends AbstractScreen {
     public void render(float delta) {
 
         super.render(delta);
+
+        showProgressbool = showProgress.isChecked();
 
         update(delta);
 
@@ -324,6 +342,26 @@ public class SimulationScreen extends AbstractScreen {
 
             logic = new NaiveSeedsGrowthLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText() ) );
             logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
+
+        }
+
+        if(recrystallizeButton.isPressed() && Gdx.input.justTouched()) {
+
+            dynamicRecrystallizationLogic = new DynamicRecrystallizationLogic(logic);
+
+            dynamicRecrystallizationLogic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
+
+            logic = dynamicRecrystallizationLogic;
+
+        }
+
+        if (monteCarloButton.isPressed() && Gdx.input.justTouched()) {
+
+            monteCarloLogic = new MonteCarloLogic(logic);
+
+            monteCarloLogic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
+
+            logic = monteCarloLogic;
 
         }
 

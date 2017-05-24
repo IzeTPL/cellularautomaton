@@ -8,12 +8,13 @@ import com.cellular.automaton.engine.logic.Logic;
  */
 public class DynamicRecrystallizationLogic extends Logic {
 
-    double time = 0;
+    double time;
 
-    public DynamicRecrystallizationLogic(int x, int y) {
+    public DynamicRecrystallizationLogic(Logic logic) {
 
         super();
-        board = new DynamicRecrystallizationBoard(x, y);
+        board = new DynamicRecrystallizationBoard(logic.getBoard());
+        time = 0;
 
     }
 
@@ -33,7 +34,7 @@ public class DynamicRecrystallizationLogic extends Logic {
         for (Cell cell : board.getCells()) {
 
             DynamicRecrystallizationCell dynamicRecrystallizationCell = (DynamicRecrystallizationCell) cell;
-            dynamicRecrystallizationCell.addRest(DynamicRecrystallizationCell.rest/1000);
+            dynamicRecrystallizationCell.addRest(DynamicRecrystallizationCell.rest);
 
         }
 

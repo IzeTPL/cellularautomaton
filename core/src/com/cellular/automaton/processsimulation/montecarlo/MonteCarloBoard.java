@@ -1,38 +1,35 @@
-package com.cellular.automaton.processsimulation.naiveseedsgrowth;
+package com.cellular.automaton.processsimulation.montecarlo;
 
 import com.badlogic.gdx.graphics.Color;
 import com.cellular.automaton.engine.logic.Board;
 import com.cellular.automaton.engine.logic.Cell;
 import com.cellular.automaton.engine.logic.Point;
 import com.cellular.automaton.engine.logic.State;
+import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthCell;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
  * Created by marian on 06.05.17.
  */
-public class NaiveSeedsGrowthBoard extends Board {
+public class MonteCarloBoard extends Board {
 
     protected static int newID = 0;
 
-    public NaiveSeedsGrowthBoard(int x, int y) {
+    public MonteCarloBoard(Board board) {
 
         super();
 
-        size = new Point(x, y);
+        size = new Point(board.getSize().x, board.getSize().y);
 
-        for (int i = 0; i < size.x; i++) {
+        for (int i = 0; i < board.getCells().size(); i++) {
 
-            for (int j = 0; j < size.y; j++) {
-
-                cells.add(new NaiveSeedsGrowthCell(i, j));
-
-            }
-
+                cells.add(new MonteCarloCell( (NaiveSeedsGrowthCell) board.getCells().get(i) ) );
 
         }
+
+        this.boundaryConditions = board.getBoundaryConditions();
+        this.neighborhoods = board.getNeighborhoods();
 
     }
 
@@ -61,10 +58,10 @@ public class NaiveSeedsGrowthBoard extends Board {
             while((color.r + color.g + color.a) < 0.5f) {
                 color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
             }
-            cell.setNextColor(color);
-            cell.setNextState(State.ALIVE);
-            ( (NaiveSeedsGrowthCell) cell).setNextSeedID(++newID);
-            NaiveSeedsGrowthCell.seedList.put(newID, color);
+            cell.setColor(color);
+            cell.setCurrentState(State.ALIVE);
+            ( (MonteCarloCell) cell).setSeedID(++newID);
+            MonteCarloCell.seedList.put(newID, color);
         }
 
     }

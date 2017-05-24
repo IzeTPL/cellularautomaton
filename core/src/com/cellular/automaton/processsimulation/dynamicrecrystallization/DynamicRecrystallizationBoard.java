@@ -16,22 +16,20 @@ public class DynamicRecrystallizationBoard extends Board {
 
     protected static int newID = 0;
 
-    public DynamicRecrystallizationBoard(int x, int y) {
+    public DynamicRecrystallizationBoard(Board board) {
 
         super();
 
-        size = new Point(x, y);
+        size = new Point(board.getSize().x, board.getSize().y);
 
-        for (int i = 0; i < size.x; i++) {
+        for (int i = 0; i < board.getCells().size(); i++) {
 
-            for (int j = 0; j < size.y; j++) {
-
-                cells.add(new NaiveSeedsGrowthCell(i, j));
-
-            }
-
+                cells.add(new DynamicRecrystallizationCell( (NaiveSeedsGrowthCell) board.getCells().get(i), board.getCells().size() ) );
 
         }
+
+        this.boundaryConditions = board.getBoundaryConditions();
+        this.neighborhoods = board.getNeighborhoods();
 
     }
 

@@ -1,5 +1,8 @@
 package com.cellular.automaton.engine.logic;
 
+import com.cellular.automaton.engine.logic.boudarycondition.PeriodicBoudaryCondition;
+import com.cellular.automaton.engine.logic.neighbourhood.PentagonalRandomNeighbourhood;
+
 public abstract class Logic {
 
     protected Board board;
@@ -20,29 +23,32 @@ public abstract class Logic {
 
         //long startTime = System.currentTimeMillis();
         int threadsNum = Runtime.getRuntime().availableProcessors() * Runtime.getRuntime().availableProcessors();
+        //threadsNum = 1;
         int start = 0;
         int end = 0;
-        Thread[] threads = new LogicThread[threadsNum];
+        Thread[] threads = new Thread[threadsNum];
+
+        //board.setNeighbourhood(new PentagonalRandomNeighbourhood(), new PeriodicBoudaryCondition());
 
         for (int i = 0; i < threadsNum; i++) {
 
-            if(board.size.x*board.size.y % threadsNum == 0) {
+            if(board.cells.size() % threadsNum == 0) {
 
-                end += board.size.x*board.size.y / threadsNum;
+                end += board.cells.size() / threadsNum;
 
             } else {
 
-                end += (board.size.x*board.size.y / threadsNum) + 1;
+                end += (board.cells.size() / threadsNum) + 1;
 
             }
 
             int warunek = (end - start) * (i + 1);
 
-            if(warunek > board.size.x*board.size.y) {
-                end -= (warunek  - board.size.x * board.size.y);
+            if(warunek > board.cells.size()) {
+                end -= (warunek  - board.cells.size());
             }
 
-            threads[i] = new LogicThread(board.cells.subList(start,end));
+            threads[i] = createThread(board, start, end);
             threads[i].setName(Integer.toString(i));
             threads[i].start();
 
@@ -65,6 +71,12 @@ public abstract class Logic {
 
     }
 
+    public Thread createThread(Board board,int start,int end) {
+
+        return new LogicThread(board.cells.subList(start,end));
+
+    }
+
     public boolean isPaused() {
 
         return isPaused;
@@ -75,5 +87,9 @@ public abstract class Logic {
 
     public Board getBoard() {
         return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.cellular.automaton.engine.Application;
 import com.cellular.automaton.engine.logic.Logic;
+import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthLogic;
 
 public abstract class AbstractScreen implements Screen {
 
@@ -27,6 +28,8 @@ public abstract class AbstractScreen implements Screen {
 
     protected Table root;
     protected Table table;
+
+    protected boolean showProgressbool;
 
     public AbstractScreen(Application application) {
 
@@ -82,7 +85,7 @@ public abstract class AbstractScreen implements Screen {
         application.getSpriteBatch().begin();
         float width = (float)Gdx.graphics.getHeight() / ( (float)logic.getBoard().getGreaterDimesion()/(float)logic.getBoard().getSize().x);
         float height = (float)Gdx.graphics.getHeight() / ( (float)logic.getBoard().getGreaterDimesion()/(float)logic.getBoard().getSize().y);
-        Texture texture = logic.getBoard().draw();
+        Texture texture = logic.getBoard().draw(showProgressbool);
         application.getSpriteBatch().draw(texture, 0, Gdx.graphics.getHeight() - height, width, height);
         application.getSpriteBatch().end();
         texture.dispose();

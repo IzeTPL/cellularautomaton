@@ -21,7 +21,6 @@ public class NaiveSeedsGrowthCell extends Cell {
 
         super(x, y);
         seedID = 0;
-        color = new Color(Color.BLACK);
         nextColor = new Color(Color.BLACK);
         seedList = new HashMap<>();
 
@@ -109,6 +108,7 @@ public class NaiveSeedsGrowthCell extends Cell {
             nextState = State.ALIVE;
             nextColor = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
             nextSeedID = ++NaiveSeedsGrowthBoard.newID;
+            NaiveSeedsGrowthCell.seedList.put(NaiveSeedsGrowthBoard.newID, nextColor);
         }
 
         update();
@@ -129,5 +129,9 @@ public class NaiveSeedsGrowthCell extends Cell {
 
     public void setNextSeedID(Integer nextSeedID) {
         this.nextSeedID = nextSeedID;
+    }
+
+    public static HashMap<Integer, Color> getSeedList() {
+        return seedList;
     }
 }
