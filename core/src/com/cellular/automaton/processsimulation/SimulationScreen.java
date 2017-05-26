@@ -36,6 +36,7 @@ public class SimulationScreen extends AbstractScreen {
     private Label seedLabel;
     private CheckBox continousSeeding;
     private CheckBox showProgress;
+    private CheckBox showBorders;
     private Button seedButton;
     private Button toggleButton;
     private Button clearButton;
@@ -78,22 +79,23 @@ public class SimulationScreen extends AbstractScreen {
         textButtonStyle.overFontColor = Color.BLACK;
         textButtonStyle.over = DrawableColor.getColor(Color.WHITE);
 
-        Pixmap pixmap = new Pixmap(10,10, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
-        Drawable drawable1 = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap) ) );
+        Drawable drawable1 = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 
-        pixmap = new Pixmap(10,10, Pixmap.Format.RGBA8888);
+        pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
 
-        Drawable drawable2 = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap) ) );
+        Drawable drawable2 = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 
         CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(drawable1, drawable2, new BitmapFont(), Color.WHITE);
 
         continousSeeding = new CheckBox("Continous seeding", checkBoxStyle);
         showProgress = new CheckBox("Show progress", checkBoxStyle);
+        showBorders = new CheckBox("Show borders", checkBoxStyle);
 
         seedButton = new TextButton("Seed", textButtonStyle);
         toggleButton = new TextButton("Play", textButtonStyle);
@@ -207,8 +209,8 @@ public class SimulationScreen extends AbstractScreen {
         table.add(widthLabel).expandX();
         table.add(heightLabel).expandX();
         table.row();
-        table.add(widthField).width(uiViewport.getWorldWidth()/2);
-        table.add(heightField).width(uiViewport.getWorldWidth()/2);
+        table.add(widthField).width(uiViewport.getWorldWidth() / 2);
+        table.add(heightField).width(uiViewport.getWorldWidth() / 2);
         table.row();
         table.add(seedButton).expandX().fill();
         table.add(seedTypeSelection).expandX().fill();
@@ -232,8 +234,9 @@ public class SimulationScreen extends AbstractScreen {
         table.add(showProgress).expandX().fill();
         table.row();
         table.add(monteCarloButton).expandX().fill();
+        table.add(showBorders).expandX().fill();
 
-        naiveSeedsGrowthLogic = new NaiveSeedsGrowthLogic(500,500);
+        naiveSeedsGrowthLogic = new NaiveSeedsGrowthLogic(500, 500);
         logic = naiveSeedsGrowthLogic;
 
 
@@ -244,7 +247,7 @@ public class SimulationScreen extends AbstractScreen {
     public void update(float delta) {
 
         super.update(delta);
-        timer+=delta;
+        timer += delta;
 
     }
 
@@ -255,12 +258,13 @@ public class SimulationScreen extends AbstractScreen {
         super.render(delta);
 
         showProgressbool = showProgress.isChecked();
+        showBordersbool = showBorders.isChecked();
 
         update(delta);
 
-        if(!logic.isPaused()) {
+        if (!logic.isPaused()) {
             logic.iterate();
-            if(timer > Float.parseFloat(timeField.getText()) && continousSeeding.isChecked() ) {
+            if (timer > Float.parseFloat(timeField.getText()) && continousSeeding.isChecked()) {
                 timer = 0;
                 logic.getBoard().seed();
             }
@@ -287,65 +291,65 @@ public class SimulationScreen extends AbstractScreen {
     public void handleInput() {
 
 
-        if(Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
 
             Vector2 vector2 = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             vector2 = cellViewport.unproject(vector2);
 
-            if(vector2.x > 0 && vector2.y > 0) {
-                logic.click( (int) (vector2.x / (Gdx.graphics.getHeight()/logic.getBoard().getSize().x ) ), (int) (vector2.y / (Gdx.graphics.getHeight()/logic.getBoard().getSize().y ) ) );
+            if (vector2.x > 0 && vector2.y > 0) {
+                logic.click((int) (vector2.x / (Gdx.graphics.getHeight() / logic.getBoard().getSize().x)), (int) (vector2.y / (Gdx.graphics.getHeight() / logic.getBoard().getSize().y)));
             }
 
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 
             logic.pause();
 
         }
 
-        if(seedButton.isPressed() && Gdx.input.justTouched()) {
+        if (seedButton.isPressed() && Gdx.input.justTouched()) {
 
             switch (seedTypeSelection.getSelectedIndex()) {
                 case 0:
                     logic.getBoard().seed();
                     break;
                 case 1:
-                    ( (NaiveSeedsGrowthBoard)logic.getBoard() ).seed(Integer.parseInt(seedField.getText()));
+                    ((NaiveSeedsGrowthBoard) logic.getBoard()).seed(Integer.parseInt(seedField.getText()));
                     break;
                 case 2:
-                    ( (NaiveSeedsGrowthBoard)logic.getBoard() ).radiusSeed(Integer.parseInt(seedField.getText()));
+                    ((NaiveSeedsGrowthBoard) logic.getBoard()).radiusSeed(Integer.parseInt(seedField.getText()));
                     break;
             }
 
         }
 
-        if(toggleButton.isPressed() && Gdx.input.justTouched()) {
+        if (toggleButton.isPressed() && Gdx.input.justTouched()) {
 
             logic.pause();
 
         }
 
-        if(clearButton.isPressed() && Gdx.input.justTouched()) {
+        if (clearButton.isPressed() && Gdx.input.justTouched()) {
 
             logic.getBoard().clear();
 
         }
 
-        if(nextButton.isPressed() && Gdx.input.justTouched() && logic.isPaused()) {
+        if (nextButton.isPressed() && Gdx.input.justTouched() && logic.isPaused()) {
 
             logic.iterate();
 
         }
 
-        if(resizeButton.isPressed() && Gdx.input.justTouched()) {
+        if (resizeButton.isPressed() && Gdx.input.justTouched()) {
 
-            logic = new NaiveSeedsGrowthLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText() ) );
+            logic = new NaiveSeedsGrowthLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText()));
             logic.getBoard().setNeighbourhood(logic.getBoard().getNeighborhoods().get(neighbourhoodSelection.getSelectedIndex()), logic.getBoard().getBoundaryConditions().get(boundaryConditionSelection.getSelectedIndex()));
 
         }
 
-        if(recrystallizeButton.isPressed() && Gdx.input.justTouched()) {
+        if (recrystallizeButton.isPressed() && Gdx.input.justTouched()) {
 
             dynamicRecrystallizationLogic = new DynamicRecrystallizationLogic(logic);
 

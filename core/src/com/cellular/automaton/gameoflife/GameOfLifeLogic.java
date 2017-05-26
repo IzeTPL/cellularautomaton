@@ -5,7 +5,7 @@ import com.cellular.automaton.engine.logic.Logic;
 import com.cellular.automaton.engine.logic.boudarycondition.PeriodicBoudaryCondition;
 import com.cellular.automaton.engine.logic.neighbourhood.MooreNeighbourHood;
 
-public class GameOfLifeLogic extends Logic{
+public class GameOfLifeLogic extends Logic {
 
     public GameOfLifeLogic(int x, int y) {
 
@@ -24,7 +24,7 @@ public class GameOfLifeLogic extends Logic{
 
     @Override
     public void click(int x, int y) {
-        ( (GameOfLifeBoard) board).swap(x, y);
+        ((GameOfLifeBoard) board).swap(x, y);
     }
 
 }

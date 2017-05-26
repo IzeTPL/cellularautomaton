@@ -2,11 +2,9 @@ package com.cellular.automaton.processsimulation.montecarlo;
 
 import com.badlogic.gdx.graphics.Color;
 import com.cellular.automaton.engine.logic.Cell;
-import com.cellular.automaton.engine.logic.State;
 import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthCell;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -15,9 +13,9 @@ import java.util.Random;
  */
 public class MonteCarloCell extends Cell {
 
+    protected static HashMap<Integer, Color> seedList;
     protected Integer seedID;
     protected Integer nextSeedID;
-    protected static HashMap<Integer, Color> seedList;
 
     public MonteCarloCell(NaiveSeedsGrowthCell cell) {
 
@@ -44,36 +42,32 @@ public class MonteCarloCell extends Cell {
 
         for (int i = 0; i < neighbors.size(); i++) {
 
-            neighborsID[i] = ( (MonteCarloCell) neighbors.get(i) ).seedID;
+            neighborsID[i] = ((MonteCarloCell) neighbors.get(i)).seedID;
 
         }
 
-        int seedID = neighborsID[random.nextInt( neighbors.size() ) ];
+        int seedID = neighborsID[random.nextInt(neighbors.size())];
 
-        for (Cell cell:neighbors) {
+        for (Cell cell : neighbors) {
 
-            MonteCarloCell monteCarloCell = (MonteCarloCell) cell;
-
-            if(!Objects.equals(this.seedID, ((MonteCarloCell) cell).getSeedID())) {
+            if (!Objects.equals(this.seedID, ((MonteCarloCell) cell).getSeedID())) {
                 energy++;
             }
 
-            if(!Objects.equals(seedID, ((MonteCarloCell) cell).getSeedID())) {
+            if (!Objects.equals(seedID, ((MonteCarloCell) cell).getSeedID())) {
                 newEnergy++;
             }
 
 
-
         }
 
-        if(newEnergy - energy <= 0) {
+        if (newEnergy - energy <= 0) {
 
             nextSeedID = seedID;
             nextColor = seedList.get(seedID);
             return true;
 
         }
-
 
 
         return false;
@@ -84,9 +78,9 @@ public class MonteCarloCell extends Cell {
 
         int sameID = 0;
 
-        for (Cell cell: neighbors) {
+        for (Cell cell : neighbors) {
 
-            if( ( (MonteCarloCell) cell).seedID == seedID ) sameID++;
+            if (Objects.equals(((MonteCarloCell) cell).seedID, seedID)) sameID++;
 
         }
 

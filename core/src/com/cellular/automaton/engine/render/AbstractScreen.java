@@ -3,14 +3,12 @@ package com.cellular.automaton.engine.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.cellular.automaton.engine.Application;
 import com.cellular.automaton.engine.logic.Logic;
-import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthLogic;
 
 public abstract class AbstractScreen implements Screen {
 
@@ -30,6 +28,7 @@ public abstract class AbstractScreen implements Screen {
     protected Table table;
 
     protected boolean showProgressbool;
+    protected boolean showBordersbool;
 
     public AbstractScreen(Application application) {
 
@@ -42,8 +41,8 @@ public abstract class AbstractScreen implements Screen {
         cellViewport = new FitViewport(Gdx.graphics.getHeight(), Gdx.graphics.getHeight(), cellCamera);
         uiViewport = new FitViewport(Gdx.graphics.getWidth() - Gdx.graphics.getHeight(), Gdx.graphics.getHeight(), uiCamera);
 
-        cellCamera.position.set(cellViewport.getWorldWidth()/2, cellViewport.getWorldHeight()/2, 0);
-        uiCamera.position.set(uiViewport.getWorldWidth()/2, uiViewport.getWorldHeight()/2, 0);
+        cellCamera.position.set(cellViewport.getWorldWidth() / 2, cellViewport.getWorldHeight() / 2, 0);
+        uiCamera.position.set(uiViewport.getWorldWidth() / 2, uiViewport.getWorldHeight() / 2, 0);
 
         stage = new Stage(uiViewport, this.application.getSpriteBatch());
 
@@ -72,20 +71,20 @@ public abstract class AbstractScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         uiViewport.setCamera(uiCamera);
-        uiViewport.setScreenBounds(0,0, Gdx.graphics.getWidth() - Gdx.graphics.getHeight(), Gdx.graphics.getHeight());
+        uiViewport.setScreenBounds(0, 0, Gdx.graphics.getWidth() - Gdx.graphics.getHeight(), Gdx.graphics.getHeight());
         uiViewport.apply();
         application.getSpriteBatch().setProjectionMatrix(uiCamera.combined);
         stage.act();
         stage.draw();
 
         cellViewport.setCamera(cellCamera);
-        cellViewport.setScreenBounds(Gdx.graphics.getWidth() - Gdx.graphics.getHeight(),0, Gdx.graphics.getHeight(), Gdx.graphics.getHeight());
+        cellViewport.setScreenBounds(Gdx.graphics.getWidth() - Gdx.graphics.getHeight(), 0, Gdx.graphics.getHeight(), Gdx.graphics.getHeight());
         cellViewport.apply();
         application.getSpriteBatch().setProjectionMatrix(cellCamera.combined);
         application.getSpriteBatch().begin();
-        float width = (float)Gdx.graphics.getHeight() / ( (float)logic.getBoard().getGreaterDimesion()/(float)logic.getBoard().getSize().x);
-        float height = (float)Gdx.graphics.getHeight() / ( (float)logic.getBoard().getGreaterDimesion()/(float)logic.getBoard().getSize().y);
-        Texture texture = logic.getBoard().draw(showProgressbool);
+        float width = (float) Gdx.graphics.getHeight() / ((float) logic.getBoard().getGreaterDimesion() / (float) logic.getBoard().getSize().x);
+        float height = (float) Gdx.graphics.getHeight() / ((float) logic.getBoard().getGreaterDimesion() / (float) logic.getBoard().getSize().y);
+        Texture texture = logic.getBoard().draw(showProgressbool, showBordersbool);
         application.getSpriteBatch().draw(texture, 0, Gdx.graphics.getHeight() - height, width, height);
         application.getSpriteBatch().end();
         texture.dispose();

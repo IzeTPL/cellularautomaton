@@ -1,4 +1,5 @@
 package com.cellular.automaton.engine.logic;
+
 import com.badlogic.gdx.graphics.Color;
 import com.cellular.automaton.model.ICell;
 

@@ -1,8 +1,5 @@
 package com.cellular.automaton.engine.logic;
 
-import com.cellular.automaton.engine.logic.boudarycondition.PeriodicBoudaryCondition;
-import com.cellular.automaton.engine.logic.neighbourhood.PentagonalRandomNeighbourhood;
-
 public abstract class Logic {
 
     protected Board board;
@@ -32,7 +29,7 @@ public abstract class Logic {
 
         for (int i = 0; i < threadsNum; i++) {
 
-            if(board.cells.size() % threadsNum == 0) {
+            if (board.cells.size() % threadsNum == 0) {
 
                 end += board.cells.size() / threadsNum;
 
@@ -44,8 +41,8 @@ public abstract class Logic {
 
             int warunek = (end - start) * (i + 1);
 
-            if(warunek > board.cells.size()) {
-                end -= (warunek  - board.cells.size());
+            if (warunek > board.cells.size()) {
+                end -= (warunek - board.cells.size());
             }
 
             threads[i] = createThread(board, start, end);
@@ -60,7 +57,8 @@ public abstract class Logic {
 
             try {
                 threads[i].join();
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
 
         }
 
@@ -71,9 +69,9 @@ public abstract class Logic {
 
     }
 
-    public Thread createThread(Board board,int start,int end) {
+    public Thread createThread(Board board, int start, int end) {
 
-        return new LogicThread(board.cells.subList(start,end));
+        return new LogicThread(board.cells.subList(start, end));
 
     }
 

@@ -22,11 +22,11 @@ public class HexagonalRightNeighbourhood extends Neighborhood {
                 Point position = new Point(i, j);
                 position = boundaryCondition.getPosition(position, size);
 
-                if( (currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || (currentCell.getPosition().x == i - 1 && currentCell.getPosition().y == j + 1) || (currentCell.getPosition().x == i + 1 && currentCell.getPosition().y == j - 1) || boundaryCondition.skip(position, size) ) {
+                if ((currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || (currentCell.getPosition().x == i - 1 && currentCell.getPosition().y == j + 1) || (currentCell.getPosition().x == i + 1 && currentCell.getPosition().y == j - 1) || boundaryCondition.skip(position, size)) {
                     continue;
                 }
 
-                neighbors.add(cells.get(position.x*size.x+position.y));
+                neighbors.add(cells.get(position.x * size.x + position.y));
 
             }
         }

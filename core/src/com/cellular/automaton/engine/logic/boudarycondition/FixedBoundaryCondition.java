@@ -14,7 +14,7 @@ public class FixedBoundaryCondition extends BoundaryCondition {
 
     @Override
     public boolean skip(Point position, Point size) {
-        if(position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y) return true;
+        if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y) return true;
         return false;
     }
 }

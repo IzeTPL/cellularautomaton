@@ -1,7 +1,8 @@
 package com.cellular.automaton.processsimulation.dynamicrecrystallization;
 
-import com.cellular.automaton.engine.logic.Cell;
 import com.cellular.automaton.engine.logic.Logic;
+
+import java.util.Random;
 
 /**
  * Created by marian on 06.05.17.
@@ -23,7 +24,7 @@ public class DynamicRecrystallizationLogic extends Logic {
 
         double ro1 = DynamicRecrystallizationCell.globalRo;
 
-        DynamicRecrystallizationCell.globalRo = (86710969050178.5 / 9.41268203527779) + (1 - (86710969050178.5 / 9.41268203527779) ) * Math.exp(-9.41268203527779*time);
+        DynamicRecrystallizationCell.globalRo = (86710969050178.5 / 9.41268203527779) + (1 - (86710969050178.5 / 9.41268203527779)) * Math.exp(-9.41268203527779 * time);
 
         time += 0.001;
 
@@ -31,10 +32,14 @@ public class DynamicRecrystallizationLogic extends Logic {
 
         super.iterate();
 
-        for (Cell cell : board.getCells()) {
+        Random random = new Random();
 
-            DynamicRecrystallizationCell dynamicRecrystallizationCell = (DynamicRecrystallizationCell) cell;
-            dynamicRecrystallizationCell.addRest(DynamicRecrystallizationCell.rest);
+        double rest = DynamicRecrystallizationCell.rest/100;
+
+        while (DynamicRecrystallizationCell.rest > 0) {
+
+            DynamicRecrystallizationCell dynamicRecrystallizationCell = (DynamicRecrystallizationCell) board.getCells().get(random.nextInt(board.getCells().size()));
+            dynamicRecrystallizationCell.addRest(rest);
 
         }
 
@@ -42,7 +47,7 @@ public class DynamicRecrystallizationLogic extends Logic {
 
     @Override
     public void click(int x, int y) {
-        ( (DynamicRecrystallizationBoard) board).swap(x, y);
+        ((DynamicRecrystallizationBoard) board).swap(x, y);
     }
 
 }

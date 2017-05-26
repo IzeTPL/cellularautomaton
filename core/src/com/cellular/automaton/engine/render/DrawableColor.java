@@ -25,11 +25,11 @@ public class DrawableColor {
 
     public static TextureRegionDrawable getColor(float r, float g, float b, float a) {
 
-        Pixmap pixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(r, g, b, a);
         pixmap.fill();
 
-        return new TextureRegionDrawable(new TextureRegion(new Texture(pixmap) ) );
+        return new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 
     }
 

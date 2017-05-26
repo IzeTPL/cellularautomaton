@@ -20,10 +20,10 @@ public class PentagonalRandomNeighbourhood extends Neighborhood {
         boolean[] skip = new boolean[8];
         int two = 0;
         int iterator = -1;
-        while(two < 3) {
+        while (two < 3) {
 
             int index = random.nextInt(8);
-            if(!skip[index]) {
+            if (!skip[index]) {
                 skip[index] = true;
                 two++;
             }
@@ -37,13 +37,14 @@ public class PentagonalRandomNeighbourhood extends Neighborhood {
                 Point position = new Point(i, j);
                 position = boundaryCondition.getPosition(position, size);
 
-                if (!(currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y)) iterator++;
+                if (!(currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y))
+                    iterator++;
 
-                if( (currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || skip[iterator] || boundaryCondition.skip(position, size) ) {
+                if ((currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || skip[iterator] || boundaryCondition.skip(position, size)) {
                     continue;
                 }
 
-                neighbors.add(cells.get(position.x*size.x+position.y));
+                neighbors.add(cells.get(position.x * size.x + position.y));
 
             }
         }

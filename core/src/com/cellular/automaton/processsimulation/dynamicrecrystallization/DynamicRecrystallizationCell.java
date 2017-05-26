@@ -3,24 +3,26 @@ package com.cellular.automaton.processsimulation.dynamicrecrystallization;
 import com.badlogic.gdx.graphics.Color;
 import com.cellular.automaton.engine.logic.Cell;
 import com.cellular.automaton.engine.logic.State;
-import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthBoard;
 import com.cellular.automaton.processsimulation.naiveseedsgrowth.NaiveSeedsGrowthCell;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * Created by marian on 06.05.17.
  */
 public class DynamicRecrystallizationCell extends Cell {
 
-    protected Integer seedID;
-    protected Integer nextSeedID;
-    protected static HashMap<Integer, Color> seedList;
-    private double ro;
-    private static double roCritical;
     public static double roPerCell;
     public static double globalRo;
     public static double rest;
+    protected static HashMap<Integer, Color> seedList;
+    private static double roCritical;
+    protected Integer seedID;
+    protected Integer nextSeedID;
+    private double ro;
 
     public DynamicRecrystallizationCell(NaiveSeedsGrowthCell cell, int size) {
 
@@ -36,19 +38,17 @@ public class DynamicRecrystallizationCell extends Cell {
         seedList = NaiveSeedsGrowthCell.getSeedList();
 
         ro = 0;
-        roCritical = (86710969050178.5 / 9.41268203527779) + (1.0 - (86710969050178.5 / 9.41268203527779) ) * Math.exp(-9.41268203527779*0.065) / (double)size;
+        roCritical = ( (86710969050178.5 / 9.41268203527779) + (1.0 - (86710969050178.5 / 9.41268203527779)) * Math.exp(-9.41268203527779 * 0.065) ) / (double) size;
 
     }
 
     @Override
     public boolean checkNeighbors() {
 
-        if(currentState == State.ALIVE) {
-
             HashMap<Color, Integer> neighborSeeds = new HashMap<>();
 
             int sameID = 0;
-            Color neighborColor = new Color(Color.GOLD);
+            Color neighborColor = Color.GOLD;
             boolean recrystallized = false;
             double maxDensity = 0;
 
@@ -56,9 +56,9 @@ public class DynamicRecrystallizationCell extends Cell {
 
                 DynamicRecrystallizationCell dynamicRecrystallizationCell = (DynamicRecrystallizationCell) cell;
 
-                if(Objects.equals(dynamicRecrystallizationCell.seedID, seedID)) {
+                if (Objects.equals(dynamicRecrystallizationCell.seedID, seedID)) {
 
-                    if(neighborSeeds.containsKey(((DynamicRecrystallizationCell) cell).getSeedID())) {
+                    if (neighborSeeds.containsKey(((DynamicRecrystallizationCell) cell).getSeedID())) {
 
                         neighborSeeds.replace(((DynamicRecrystallizationCell) cell).getColor(), neighborSeeds.get(((DynamicRecrystallizationCell) cell).getColor()), neighborSeeds.get(((DynamicRecrystallizationCell) cell).getColor()) + 1);
 
@@ -75,9 +75,8 @@ public class DynamicRecrystallizationCell extends Cell {
 
                 int max = -1;
 
-                for (Map.Entry<Color, Integer> entry : neighborSeeds.entrySet())
-                {
-                    if(entry.getValue() > max && entry.getKey().equals(seedID) ) {
+                for (Map.Entry<Color, Integer> entry : neighborSeeds.entrySet()) {
+                    if (entry.getValue() > max && entry.getKey().equals(seedID)) {
 
                         max = entry.getValue();
                         neighborColor = entry.getKey();
@@ -86,52 +85,51 @@ public class DynamicRecrystallizationCell extends Cell {
 
                 }
 
-                if(dynamicRecrystallizationCell.currentState == State.RECRYSTALLIZED && Objects.equals(seedID, dynamicRecrystallizationCell.seedID)) {
+                if (dynamicRecrystallizationCell.currentState == State.RECRYSTALLIZED && Objects.equals(seedID, dynamicRecrystallizationCell.seedID)) {
 
                     recrystallized = true;
                     neighborColor = dynamicRecrystallizationCell.getColor();
 
                 }
 
-                if(sameID == neighbors.size()) {
+            }
 
-                    ro += 0.2 * roPerCell;
-                    rest += 0.8 * roPerCell;
+            if (sameID == neighbors.size()) {
 
-                } else {
+                ro += 0.2 * roPerCell;
+                rest += 0.8 * roPerCell;
 
-                    ro += 0.8 * roPerCell;
-                    rest += 0.2 * roPerCell;
+            } else {
 
-                }
+                ro += 0.8 * roPerCell;
+                rest += 0.2 * roPerCell;
 
             }
 
-            if(recrystallized && maxDensity > ro) {
 
-                nextState = State.RECRYSTALLIZED;
-                nextColor = neighborColor;
-                ro = globalRo;
+                if (recrystallized && currentState == State.ALIVE) {
 
-                return true;
+                    nextState = State.RECRYSTALLIZED;
+                    nextColor = neighborColor;
+                    ro = 1;
 
-            }
+                    return true;
 
-            if(ro > roCritical && neighbors.size() != sameID) {
-
-                Random random = new Random();
-                Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
-                while((color.r + color.g + color.a) < 0.5f && color == this.color) {
-                    color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
                 }
+
+                if (ro > roCritical && neighbors.size() != sameID && !recrystallized && currentState == State.ALIVE) {
+
+                    Random random = new Random();
+                    Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
+                    while ((color.r + color.g + color.a) < 0.5f && color == this.color) {
+                        color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
+                    }
 
                     nextState = State.RECRYSTALLIZED;
                     nextColor = color;
-                    ro = globalRo;
+                    ro = 1;
 
-                }
-
-                return true;
+                    return true;
 
             }
 
@@ -139,44 +137,35 @@ public class DynamicRecrystallizationCell extends Cell {
 
     }
 
-    public boolean addRest(double rest) {
+    public void addRest(double rest) {
 
-        boolean done = false;
+        int sameID = 0;
 
-        //if(currentState == State.ALIVE) {
+        for (Cell cell : neighbors) {
 
-            int sameID = 0;
+            DynamicRecrystallizationCell dynamicRecrystallizationCell = (DynamicRecrystallizationCell) cell;
 
-            for (Cell cell : neighbors) {
+            if (Objects.equals(dynamicRecrystallizationCell.seedID, seedID)) {
 
-                DynamicRecrystallizationCell dynamicRecrystallizationCell = (DynamicRecrystallizationCell) cell;
-
-                if(Objects.equals(dynamicRecrystallizationCell.seedID, seedID)) {
-
-                    sameID++;
-
-                }
-
-                if(sameID != neighbors.size()) {
-
-                    Random random = new Random();
-                    if(random.nextInt(16) == 1)
-                        ro += rest;
-
-                }
+                sameID++;
 
             }
 
-        //}
+        }
 
-        return done;
+        if (sameID != neighbors.size()) {
+
+            ro += rest;
+            DynamicRecrystallizationCell.rest -= rest;
+
+        }
 
     }
 
     @Override
     public void update() {
 
-        if( (currentState == State.ALIVE && nextState == State.RECRYSTALLIZED) ) {
+        if ((currentState == State.ALIVE && nextState == State.RECRYSTALLIZED)) {
 
             color = nextColor;
 

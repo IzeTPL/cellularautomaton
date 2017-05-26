@@ -6,7 +6,6 @@
 package cellautomat.onedimension;
 
 /**
- *
  * @author mslupek
  */
 public class Main {
@@ -19,7 +18,7 @@ public class Main {
         CellAutomat cellAutomat = new CellAutomat(8, 90);
         cellAutomat.startSimulation();
         cellAutomat.displayResults();
-        
+
     }
-    
+
 }

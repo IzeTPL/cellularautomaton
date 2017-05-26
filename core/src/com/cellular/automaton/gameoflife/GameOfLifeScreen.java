@@ -14,7 +14,7 @@ import com.cellular.automaton.engine.Application;
 import com.cellular.automaton.engine.render.AbstractScreen;
 import com.cellular.automaton.engine.render.DrawableColor;
 
-public class GameOfLifeScreen extends AbstractScreen{
+public class GameOfLifeScreen extends AbstractScreen {
 
     private TextField widthField;
     private TextField heightField;
@@ -65,8 +65,8 @@ public class GameOfLifeScreen extends AbstractScreen{
         table.add(widthLabel).expandX();
         table.add(heightLabel).expandX();
         table.row();
-        table.add(widthField).width(uiViewport.getWorldWidth()/2);
-        table.add(heightField).width(uiViewport.getWorldWidth()/2);
+        table.add(widthField).width(uiViewport.getWorldWidth() / 2);
+        table.add(heightField).width(uiViewport.getWorldWidth() / 2);
         table.row();
         table.add(seedButton).expandX();
         table.add(toggleButton).expandX();
@@ -76,14 +76,14 @@ public class GameOfLifeScreen extends AbstractScreen{
         table.row();
         table.add(resizeButton).expandX();
 
-        logic = new GameOfLifeLogic(20,20);
+        logic = new GameOfLifeLogic(20, 20);
 
     }
 
     public void update(float delta) {
 
         super.update(delta);
-        timer+=delta;
+        timer += delta;
 
     }
 
@@ -95,14 +95,12 @@ public class GameOfLifeScreen extends AbstractScreen{
 
         update(delta);
 
-        if(!logic.isPaused() && timer > 1/5f) {
+        if (!logic.isPaused() && timer > 1 / 5f) {
             logic.iterate();
             timer = 0;
         }
 
         handleInput();
-
-        logic.getBoard().draw(true);
 
     }
 
@@ -123,50 +121,50 @@ public class GameOfLifeScreen extends AbstractScreen{
     public void handleInput() {
 
 
-        if(Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
 
             Vector2 vector2 = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             vector2 = cellViewport.unproject(vector2);
 
-            if(vector2.x > 0 && vector2.y > 0) {
-                logic.click( (int) (vector2.x / (Gdx.graphics.getHeight()/logic.getBoard().getSize().x ) ), (int) (vector2.y / (Gdx.graphics.getHeight()/logic.getBoard().getSize().y ) ) );
+            if (vector2.x > 0 && vector2.y > 0) {
+                logic.click((int) (vector2.x / (Gdx.graphics.getHeight() / logic.getBoard().getSize().x)), (int) (vector2.y / (Gdx.graphics.getHeight() / logic.getBoard().getSize().y)));
             }
 
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 
             logic.pause();
 
         }
 
-        if(seedButton.isPressed() && Gdx.input.justTouched()) {
+        if (seedButton.isPressed() && Gdx.input.justTouched()) {
 
             logic.getBoard().seed();
 
         }
 
-        if(toggleButton.isPressed() && Gdx.input.justTouched()) {
+        if (toggleButton.isPressed() && Gdx.input.justTouched()) {
 
             logic.pause();
 
         }
 
-        if(clearButton.isPressed() && Gdx.input.justTouched()) {
+        if (clearButton.isPressed() && Gdx.input.justTouched()) {
 
             logic.getBoard().clear();
 
         }
 
-        if(nextButton.isPressed() && Gdx.input.justTouched() && logic.isPaused()) {
+        if (nextButton.isPressed() && Gdx.input.justTouched() && logic.isPaused()) {
 
             logic.iterate();
 
         }
 
-        if(resizeButton.isPressed() && Gdx.input.justTouched()) {
+        if (resizeButton.isPressed() && Gdx.input.justTouched()) {
 
-            logic = new GameOfLifeLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText() ) );
+            logic = new GameOfLifeLogic(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText()));
 
         }
 

@@ -8,9 +8,11 @@ import com.cellular.automaton.engine.logic.boudarycondition.BoundaryCondition;
 import com.cellular.automaton.engine.logic.boudarycondition.FixedBoundaryCondition;
 import com.cellular.automaton.engine.logic.boudarycondition.PeriodicBoudaryCondition;
 import com.cellular.automaton.engine.logic.neighbourhood.*;
+import com.cellular.automaton.processsimulation.montecarlo.MonteCarloCell;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -45,12 +47,12 @@ public abstract class Board {
 
         Random random = new Random();
 
-            for (Cell cell : cells) {
+        for (Cell cell : cells) {
 
-                randomize(cell, random);
-                cell.update();
+            randomize(cell, random);
+            cell.update();
 
-            }
+        }
 
 
     }
@@ -58,14 +60,14 @@ public abstract class Board {
     public void clear() {
 
 
-            for (Cell cell : cells) {
-                 cell.setNextState(State.EMPTY);
-                 cell.update();
-            }
+        for (Cell cell : cells) {
+            cell.setNextState(State.EMPTY);
+            cell.update();
+        }
 
     }
 
-    public Texture draw(boolean progress) {
+    public Texture draw(boolean progress, boolean borders) {
 
         float width = Gdx.graphics.getHeight() / size.x;
         float height = Gdx.graphics.getHeight() / size.y;
@@ -73,19 +75,28 @@ public abstract class Board {
         Pixmap board = new Pixmap(size.x, size.y, Pixmap.Format.RGBA8888);
 
 
+        for (Cell cell : cells) {
 
-            for (Cell cell : cells) {
+            int sameID = 0;
 
-                if(progress) {
-                    if(cell.getCurrentState() == State.EMPTY) board.setColor(Color.BLACK);
-                    else if(cell.getCurrentState() == State.ALIVE) board.setColor(Color.WHITE);
-                    else board.setColor(Color.BLUE);
-                } else {
-                    board.setColor(cell.getColor());
-                }
-                board.drawPixel(cell.getPosition().x, cell.getPosition().y);
+            for (Cell neighbor : cell.getNeighbors()) {
+
+                if (Objects.equals(cell.color, neighbor.color)) sameID++;
 
             }
+
+            if (progress) {
+                if (cell.getCurrentState() == State.EMPTY) board.setColor(Color.BLACK);
+                else if (cell.getCurrentState() == State.ALIVE) board.setColor(Color.WHITE);
+                else board.setColor(Color.BLUE);
+            } else if (sameID != cell.getNeighbors().size() && sameID > 0 && borders) {
+                board.setColor(Color.BLACK);
+            } else {
+                board.setColor(cell.getColor());
+            }
+            board.drawPixel(cell.getPosition().x, cell.getPosition().y);
+
+        }
 
 
         Texture texture = new Texture(board);
@@ -98,7 +109,7 @@ public abstract class Board {
 
     public void randomize(Cell cell, Random random) {
 
-        if (random.nextInt( (int) ( (size.x * size.y) * 0.01f ) ) == 1) {
+        if (random.nextInt((int) ((size.x * size.y) * 0.01f)) == 1) {
             cell.setNextState(State.ALIVE);
         }
 
@@ -107,17 +118,17 @@ public abstract class Board {
     public void setNeighbourhood(Neighborhood neighbourhood, BoundaryCondition boundaryCondition) {
 
 
-            for (Cell cell : cells) {
+        for (Cell cell : cells) {
 
-                cell.neighbors = neighbourhood.findNeighbors(cells, cell, boundaryCondition, size);
+            cell.neighbors = neighbourhood.findNeighbors(cells, cell, boundaryCondition, size);
 
-            }
+        }
 
     }
 
     public int getGreaterDimesion() {
 
-        if(size.x > size.y) return size.x;
+        if (size.x > size.y) return size.x;
         return size.y;
 
     }

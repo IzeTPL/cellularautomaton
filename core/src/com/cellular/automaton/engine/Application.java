@@ -10,14 +10,14 @@ public abstract class Application extends Game {
     protected Board board;
 
     @Override
-    public void create () {
+    public void create() {
 
         spriteBatch = new SpriteBatch();
 
     }
 
     @Override
-    public void render () {
+    public void render() {
 
         super.render();
 

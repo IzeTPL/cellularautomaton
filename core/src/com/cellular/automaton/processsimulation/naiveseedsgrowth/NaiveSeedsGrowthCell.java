@@ -13,9 +13,9 @@ import java.util.Random;
  */
 public class NaiveSeedsGrowthCell extends Cell {
 
+    protected static HashMap<Integer, Color> seedList;
     protected Integer seedID;
     protected Integer nextSeedID;
-    protected static HashMap<Integer, Color> seedList;
 
     public NaiveSeedsGrowthCell(int x, int y) {
 
@@ -27,16 +27,20 @@ public class NaiveSeedsGrowthCell extends Cell {
 
     }
 
+    public static HashMap<Integer, Color> getSeedList() {
+        return seedList;
+    }
+
     @Override
     public boolean checkNeighbors() {
 
-        if(currentState == State.EMPTY) {
+        if (currentState == State.EMPTY) {
 
             HashMap<Integer, Integer> neighborSeeds = new HashMap<>();
 
             for (Cell cell : neighbors) {
 
-                if(neighborSeeds.containsKey(((NaiveSeedsGrowthCell) cell).getSeedID())) {
+                if (neighborSeeds.containsKey(((NaiveSeedsGrowthCell) cell).getSeedID())) {
 
                     neighborSeeds.replace(((NaiveSeedsGrowthCell) cell).getSeedID(), neighborSeeds.get(((NaiveSeedsGrowthCell) cell).getSeedID()), neighborSeeds.get(((NaiveSeedsGrowthCell) cell).getSeedID()) + 1);
 
@@ -50,9 +54,8 @@ public class NaiveSeedsGrowthCell extends Cell {
 
             int max = -1;
 
-            for (Map.Entry<Integer, Integer> entry : neighborSeeds.entrySet())
-            {
-                if(entry.getValue() > max && !entry.getKey().equals(0) ) {
+            for (Map.Entry<Integer, Integer> entry : neighborSeeds.entrySet()) {
+                if (entry.getValue() > max && !entry.getKey().equals(0)) {
 
                     max = entry.getValue();
                     nextSeedID = entry.getKey();
@@ -61,7 +64,7 @@ public class NaiveSeedsGrowthCell extends Cell {
 
             }
 
-            if(max != -1) {
+            if (max != -1) {
 
                 nextColor = seedList.get(nextSeedID);
                 nextState = State.ALIVE;
@@ -79,13 +82,13 @@ public class NaiveSeedsGrowthCell extends Cell {
     @Override
     public void update() {
 
-        if(currentState == State.EMPTY) {
+        if (currentState == State.EMPTY) {
 
             color = Color.BLACK;
             seedID = 0;
 
         }
-        if( (currentState == State.EMPTY && nextState == State.ALIVE) || (nextState == State.EMPTY && currentState == State.ALIVE) ) {
+        if ((currentState == State.EMPTY && nextState == State.ALIVE) || (nextState == State.EMPTY && currentState == State.ALIVE)) {
 
             color = nextColor;
             seedID = nextSeedID;
@@ -100,7 +103,7 @@ public class NaiveSeedsGrowthCell extends Cell {
 
         Random random = new Random();
 
-        if(currentState == State.ALIVE) {
+        if (currentState == State.ALIVE) {
             nextState = State.EMPTY;
             nextColor = Color.BLACK;
             nextSeedID = 0;
@@ -129,9 +132,5 @@ public class NaiveSeedsGrowthCell extends Cell {
 
     public void setNextSeedID(Integer nextSeedID) {
         this.nextSeedID = nextSeedID;
-    }
-
-    public static HashMap<Integer, Color> getSeedList() {
-        return seedList;
     }
 }

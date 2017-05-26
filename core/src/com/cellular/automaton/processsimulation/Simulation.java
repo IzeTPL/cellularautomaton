@@ -11,7 +11,7 @@ public class Simulation extends Application {
     public void create() {
 
         super.create();
-        setScreen(new SimulationScreen(this) );
+        setScreen(new SimulationScreen(this));
 
     }
 

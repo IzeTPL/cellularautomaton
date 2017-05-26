@@ -4,17 +4,17 @@ import com.cellular.automaton.engine.Application;
 
 public class GameOfLife extends Application {
 
-	@Override
-	public void create() {
+    @Override
+    public void create() {
 
-		super.create();
-		setScreen(new GameOfLifeScreen(this) );
+        super.create();
+        setScreen(new GameOfLifeScreen(this));
 
-	}
+    }
 
-	@Override
+    @Override
     public void render() {
-	    super.render();
+        super.render();
     }
 
     @Override

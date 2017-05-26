@@ -16,7 +16,7 @@ public class NaiveSeedsGrowthLogic extends Logic {
 
     @Override
     public void click(int x, int y) {
-        ( (NaiveSeedsGrowthBoard) board).swap(x, y);
+        ((NaiveSeedsGrowthBoard) board).swap(x, y);
     }
 
 }

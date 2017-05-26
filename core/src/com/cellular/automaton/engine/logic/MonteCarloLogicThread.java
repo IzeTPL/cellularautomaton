@@ -24,15 +24,13 @@ public class MonteCarloLogicThread extends Thread {
 
         List<Cell> cells = new ArrayList<>(this.cells);
 
-        cells.removeIf(cell -> ( (MonteCarloCell) cell).toRemove() );
+        cells.removeIf(cell -> ((MonteCarloCell) cell).toRemove());
 
         Random random = new Random();
 
-        cells.removeIf(cell -> ( (MonteCarloCell) cell).toRemove() );
+        while (cells.size() > 0) {
 
-        while(cells.size() > 0) {
-
-            int index = random.nextInt( cells.size() );
+            int index = random.nextInt(cells.size());
 
             cells.get(index).checkNeighbors();
             cells.remove(index);

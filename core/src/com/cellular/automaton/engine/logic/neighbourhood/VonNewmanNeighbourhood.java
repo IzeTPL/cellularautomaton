@@ -22,11 +22,11 @@ public class VonNewmanNeighbourhood extends Neighborhood {
                 Point position = new Point(i, j);
                 position = boundaryCondition.getPosition(position, size);
 
-                if( (currentCell.getPosition().x != i && currentCell.getPosition().y != j) || (currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || boundaryCondition.skip(position, size) ) {
+                if ((currentCell.getPosition().x != i && currentCell.getPosition().y != j) || (currentCell.getPosition().x == position.x && currentCell.getPosition().y == position.y) || boundaryCondition.skip(position, size)) {
                     continue;
                 }
 
-                neighbors.add(cells.get(position.x*size.x+position.y));
+                neighbors.add(cells.get(position.x * size.x + position.y));
 
             }
         }

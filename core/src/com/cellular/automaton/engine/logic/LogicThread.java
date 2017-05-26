@@ -1,7 +1,5 @@
 package com.cellular.automaton.engine.logic;
 
-import com.cellular.automaton.engine.logic.Cell;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +19,13 @@ public class LogicThread extends Thread {
 
     public void run() {
 
-            for (Cell cell : cells) {
-                cell.checkNeighbors();
-            }
+        for (Cell cell : cells) {
+            cell.checkNeighbors();
+        }
 
-            for (Cell cell : cells) {
-                cell.update();
-            }
+        for (Cell cell : cells) {
+            cell.update();
+        }
 
     }
 

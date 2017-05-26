@@ -6,8 +6,6 @@ import com.cellular.automaton.engine.logic.Cell;
 import com.cellular.automaton.engine.logic.Point;
 import com.cellular.automaton.engine.logic.State;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -40,11 +38,11 @@ public class NaiveSeedsGrowthBoard extends Board {
     public void clear() {
 
 
-            for (Cell cell : cells) {
-                cell.setNextState(State.EMPTY);
-                cell.setNextColor(Color.BLACK);
-                cell.update();
-            }
+        for (Cell cell : cells) {
+            cell.setNextState(State.EMPTY);
+            cell.setNextColor(Color.BLACK);
+            cell.update();
+        }
 
 
     }
@@ -54,16 +52,16 @@ public class NaiveSeedsGrowthBoard extends Board {
 
         super.randomize(cell, random);
 
-        boolean test = ( (NaiveSeedsGrowthCell) cell).getSeedID() == 0;
+        boolean test = ((NaiveSeedsGrowthCell) cell).getSeedID() == 0;
 
-        if(cell.getNextState() == State.ALIVE && test) {
+        if (cell.getNextState() == State.ALIVE && test) {
             Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
-            while((color.r + color.g + color.a) < 0.5f) {
+            while ((color.r + color.g + color.a) < 0.5f) {
                 color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
             }
             cell.setNextColor(color);
             cell.setNextState(State.ALIVE);
-            ( (NaiveSeedsGrowthCell) cell).setNextSeedID(++newID);
+            ((NaiveSeedsGrowthCell) cell).setNextSeedID(++newID);
             NaiveSeedsGrowthCell.seedList.put(newID, color);
         }
 
@@ -71,7 +69,7 @@ public class NaiveSeedsGrowthBoard extends Board {
 
     public void swap(int x, int y) {
 
-        ( (NaiveSeedsGrowthCell) cells.get(x*size.x+y) ).swap();
+        ((NaiveSeedsGrowthCell) cells.get(x * size.x + y)).swap();
 
     }
 
@@ -85,16 +83,16 @@ public class NaiveSeedsGrowthBoard extends Board {
         for (int i = 0; i < size.x; i++) {
 
             int distanceX = 0;
-            if(distanceY == distance + 1) distanceY = 0;
+            if (distanceY == distance + 1) distanceY = 0;
             for (int j = 0; j < size.y; j++) {
 
-                if(distanceX == distance + 1) distanceX = 0;
+                if (distanceX == distance + 1) distanceX = 0;
                 if (distanceX == distance && distanceY == distance) {
-                    Cell cell = cells.get(i*size.x+j);
+                    Cell cell = cells.get(i * size.x + j);
                     cell.setNextState(State.ALIVE);
-                    ( (NaiveSeedsGrowthCell) cell).setSeedID(++newID);
+                    ((NaiveSeedsGrowthCell) cell).setSeedID(++newID);
                     cell.update();
-                    if(cell.getCurrentState() == State.ALIVE ) {
+                    if (cell.getCurrentState() == State.ALIVE) {
                         cell.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1));
                     }
                 }
@@ -112,33 +110,33 @@ public class NaiveSeedsGrowthBoard extends Board {
         Random random = new Random();
         Point position;
 
-            for (Cell cell : cells) {
+        for (Cell cell : cells) {
 
-                boolean inside = false;
+            boolean inside = false;
 
-                for(int x=cell.getPosition().x-radius; x<cell.getPosition().x+radius; x++) {
+            for (int x = cell.getPosition().x - radius; x < cell.getPosition().x + radius; x++) {
 
-                    int yspan = (int) Math.round(radius*Math.sin(Math.acos((cell.getPosition().x-x)/radius) ) );
+                int yspan = (int) Math.round(radius * Math.sin(Math.acos((cell.getPosition().x - x) / radius)));
 
-                    for(int y=cell.getPosition().y-yspan; y<cell.getPosition().y+yspan; y++) {
+                for (int y = cell.getPosition().y - yspan; y < cell.getPosition().y + yspan; y++) {
 
-                        position = new Point(x,y);
-                        if(position.x < 0) position.x = size.x - 1;
-                        if(position.y < 0) position.y = size.y - 1;
-                        if(position.x >= size.x) position.x = 0;
-                        if(position.y >= size.y) position.y = 0;
-                        if(cells.get(position.x*size.x+position.y).getCurrentState() == State.ALIVE) inside = true;
-                        if(inside) break;
-
-                    }
-
-                    if(inside) break;
+                    position = new Point(x, y);
+                    if (position.x < 0) position.x = size.x - 1;
+                    if (position.y < 0) position.y = size.y - 1;
+                    if (position.x >= size.x) position.x = 0;
+                    if (position.y >= size.y) position.y = 0;
+                    if (cells.get(position.x * size.x + position.y).getCurrentState() == State.ALIVE) inside = true;
+                    if (inside) break;
 
                 }
 
-                if(!inside) {
-                    randomize(cell, random);
-                }
+                if (inside) break;
+
+            }
+
+            if (!inside) {
+                randomize(cell, random);
+            }
 
         }
 

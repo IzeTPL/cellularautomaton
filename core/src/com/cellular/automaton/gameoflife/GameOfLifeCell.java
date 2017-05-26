@@ -20,10 +20,10 @@ public class GameOfLifeCell extends Cell {
         int aliveCellsCount = 0;
 
         for (Cell cell : neighbors) {
-            if(cell.getCurrentState() == State.ALIVE) aliveCellsCount++;
+            if (cell.getCurrentState() == State.ALIVE) aliveCellsCount++;
         }
 
-        if( ( (aliveCellsCount == 3 || aliveCellsCount == 2) && currentState == State.ALIVE) || (aliveCellsCount == 3 && currentState == State.EMPTY) )
+        if (((aliveCellsCount == 3 || aliveCellsCount == 2) && currentState == State.ALIVE) || (aliveCellsCount == 3 && currentState == State.EMPTY))
             nextState = State.ALIVE;
         else
             nextState = State.EMPTY;
@@ -36,14 +36,14 @@ public class GameOfLifeCell extends Cell {
     public void update() {
         super.update();
 
-        if(currentState == State.ALIVE) color = Color.WHITE;
+        if (currentState == State.ALIVE) color = Color.WHITE;
         else color = Color.BLACK;
 
     }
 
     public void swap() {
 
-        if(currentState == State.ALIVE) setNextState(State.EMPTY);
+        if (currentState == State.ALIVE) setNextState(State.EMPTY);
         else setNextState(State.ALIVE);
         update();
 
